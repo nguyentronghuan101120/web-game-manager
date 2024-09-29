@@ -1,3 +1,4 @@
+# Start of Selection
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -5,6 +6,9 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+# lock file
+/package-lock.json
+/yarn.lock
 
 # testing
 /coverage
@@ -34,3 +38,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# End of Selection
