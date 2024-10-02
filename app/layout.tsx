@@ -12,22 +12,22 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "Ninja school online",
-  description: "Ninja school online",
-  icons: [
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "16x16",
-      url: "/favicon.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "32x32",
-      url: "/favicon.png",
-    },
-  ],
+  // title: "Ninja school online",
+  // description: "Ninja school online",
+  // icons: [
+  //   {
+  //     rel: "icon",
+  //     type: "image/png",
+  //     sizes: "16x16",
+  //     url: "/favicon.png",
+  //   },
+  //   {
+  //     rel: "icon",
+  //     type: "image/png",
+  //     sizes: "32x32",
+  //     url: "/favicon.png",
+  //   },
+  // ],
 };
 
 export default function RootLayout({
