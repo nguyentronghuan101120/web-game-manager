@@ -8,7 +8,7 @@ const HomePage = () => {
 
   useEffect(() => {
     interceptor
-      .get("/users") // Replace with your API endpoint
+      .get("/users") 
       .then((response) => {
         setData(response.data);
       })

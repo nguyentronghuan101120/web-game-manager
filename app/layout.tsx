@@ -3,6 +3,8 @@ import { Lexend } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/nav-bar";
 import Footer from "./components/footer";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const lexend = Lexend({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -44,6 +46,7 @@ export default function RootLayout({
         </div>
 
         <Footer></Footer>
+        <ToastContainer />
       </body>
     </html>
   );
