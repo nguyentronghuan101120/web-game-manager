@@ -42,6 +42,13 @@ export default function SignIn() {
     try {
       const response = await signInApi(data);
 
+      if (rememberMe) {
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("password", data.password); // Consider security implications
+      } else {
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+      }
       toast.success(response.data.message);
       router.push("/sign-in");
     } catch (error) {
