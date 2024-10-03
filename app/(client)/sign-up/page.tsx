@@ -6,12 +6,12 @@ import InputField from "../../components/input-field";
 import Button from "@/app/components/button";
 import Link from "next/link";
 import ErrorInputField from "@/app/components/error-input-field";
-import interceptor from "@/utils/network/interceptor";
-import { registerUrl } from "@/constants/api-url";
 import { toast } from "react-toastify";
 import { useState } from "react"; // Import useState for loading state
 import Loading from "@/app/components/loading"; // Import loading component
-
+import { signUpApi } from "@/src/data-source/auth/apis/auth-api";
+import { BaseResponse } from "@/src/utils/network/models/common/base-response";
+import { useRouter } from "next/navigation";
 interface SignUpFormData {
   email: string;
   username: string;
@@ -25,6 +25,8 @@ export default function SignUp() {
     formState: { errors },
     getValues,
   } = useForm<SignUpFormData>();
+
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false); // State to manage loading
 
@@ -61,19 +63,14 @@ export default function SignUp() {
       confirmPassword: formData.get("confirmPassword") as string,
     };
     try {
-      const response = await interceptor.post(registerUrl, data); // Simplified request
-      if (response.data['status'] === 400) {
-        toast.error(response.data['message']);
-        return;
-      }
+      const response = await signUpApi(data);
 
-      toast.success("Registration successful");
-      // Handle successful registration (e.g., redirect to another page)
+      toast.success(response.data.message);
+      router.push("/sign-in");
     } catch (error) {
-      console.error("Error during registration:", error);
-      // Handle registration error (e.g., show error message to user)
+      toast.error((error as BaseResponse).message);
     } finally {
-      setLoading(false); // Set loading to false after the process is complete
+      setLoading(false);
     }
   }
 

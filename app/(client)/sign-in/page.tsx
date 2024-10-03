@@ -7,6 +7,12 @@ import Button from "@/app/components/button";
 import Link from "next/link";
 import ErrorInputField from "@/app/components/error-input-field";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { signInApi } from "@/src/data-source/auth/apis/auth-api";
+import { BaseResponse } from "@/src/utils/network/models/common/base-response";
+import { useRouter } from "next/navigation";
+import { SignInRequest } from "@/src/data-source/auth/models/requests/sign-in-request";
+import Loading from "@/app/components/loading";
 // import ReCAPTCHA from "react-google-recaptcha"; // Import ReCAPTCHA component
 
 interface SignInFormData {
@@ -18,33 +24,37 @@ interface SignInFormData {
 export default function SignIn() {
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm<SignInFormData>();
 
   const [rememberMe, setRememberMe] = useState(false); // State for remember me checkbox
   // const [captchaValue, setCaptchaValue] = useState<string | null>(null); // State for captcha value
+  const [loading, setLoading] = useState(false); // State to manage loading
+  const router = useRouter();
+  async function handleSignIn(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true); // Set loading to true when the sign-up process starts
+    const formData = new FormData(event.currentTarget);
+    const data: SignInRequest = {
+      username: formData.get("username") as string,
+      password: formData.get("password") as string,
+    };
+    try {
+      const response = await signInApi(data);
 
-  const onSubmit = (data: SignInFormData) => {
-    // if (!captchaValue) {
-    //   alert("Please complete the CAPTCHA"); // Alert if CAPTCHA is not completed
-    //   return;
-    // }
-
-    console.log("Sign In Data:", data);
-    // Handle remember me logic here (e.g., save to localStorage)
-    if (data.rememberMe) {
-      localStorage.setItem("username", data.username);
-      localStorage.setItem("password", data.password); // Consider security implications
-    } else {
-      localStorage.removeItem("username");
-      localStorage.removeItem("password");
+      toast.success(response.data.message);
+      router.push("/sign-in");
+    } catch (error) {
+      toast.error((error as BaseResponse).message);
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
     <Card>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      {loading && <Loading />} {/* Show loading component when loading */}
+      <form onSubmit={handleSignIn}>
         <InputField
           label="Username"
           type="text"
@@ -79,7 +89,7 @@ export default function SignIn() {
             Remember Me
           </label>
         </div>
-{/* 
+        {/* 
         <div className="flex justify-center">
           <ReCAPTCHA
             sitekey="YOUR_RECAPTCHA_SITE_KEY" // Replace with your ReCAPTCHA site key
