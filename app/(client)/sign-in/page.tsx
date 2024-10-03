@@ -43,7 +43,7 @@ export default function SignIn() {
       const response = await signInApi(data);
 
       toast.success(response.data.message);
-      router.push("/sign-in");
+      router.push("/home");
     } catch (error) {
       toast.error((error as BaseResponse).message);
     } finally {
