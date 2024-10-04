@@ -5,6 +5,7 @@ import NavBar from "./components/nav-bar";
 import Footer from "./components/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ThemeProvider } from "../src/utils/theme/theme-provider"; // Import the Providers component
 
 const lexend = Lexend({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -37,16 +38,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <html lang="en" data-theme="dark">
-      <body className={`${lexend.className} antialiased flex flex-col w-full`}>
-        <NavBar />
-        <div className="h-full flex flex-col items-center justify-center py-8">
-          {children}
-        </div>
-        <Footer />
-        <ToastContainer />
-      </body>
+    <html lang="en">
+      <ThemeProvider>
+        <body
+          className={`${lexend.className} antialiased flex flex-col w-full`}
+        >
+          {" "}
+          {/* Wrap the children with Providers */}
+          <NavBar />
+          <div className="bg-white dark:bg-gray-900 flex flex-col items-center justify-center py-8">
+            {children}
+          </div>
+          <Footer />
+          <ToastContainer />
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
