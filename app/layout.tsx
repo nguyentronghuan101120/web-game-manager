@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import "./globals.css";
-import NavBar from "./components/nav-bar";
-import Footer from "./components/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "../src/utils/theme/theme-provider"; // Import the Providers component
@@ -45,16 +43,12 @@ export default function RootLayout({
         <body
           className={`${lexend.className} antialiased flex flex-col w-full`}
         >
-          {" "}
-          {/* Wrap the children with Providers */}
-          <NavBar />
           {/* <h1>
             <FormattedMessage id="greeting" />
           </h1> */}
-          <div className="bg-white dark:bg-gray-900 flex flex-col items-center justify-center py-8">
-            {children}
-          </div>
-          <Footer />
+
+          {children}
+
           <ToastContainer />
         </body>
         {/* </IntlProviderWrapper> */}
