@@ -4,7 +4,7 @@ import "./globals.css";
 import NavBar from "./components/nav-bar";
 import Footer from "./components/footer";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const lexend = Lexend({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -38,14 +38,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark">
       <body className={`${lexend.className} antialiased flex flex-col w-full`}>
-        <NavBar></NavBar>
+        <NavBar />
         <div className="h-full flex flex-col items-center justify-center py-8">
           {children}
         </div>
-
-        <Footer></Footer>
+        <Footer />
         <ToastContainer />
       </body>
     </html>
