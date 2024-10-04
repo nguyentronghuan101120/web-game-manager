@@ -23,7 +23,7 @@ export function ThemeSwitcherButton() {
         onClick={() => {
           setTheme(currentTheme === "dark" ? "light" : "dark");
         }}
-        className={`relative w-20 h-10 rounded-full p-1 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+        className={`relative w-20 h-[36px] rounded-full p-1 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 ${
           currentTheme === "dark"
             ? "bg-gray-700 focus:ring-gray-600"
             : "bg-blue-500 focus:ring-blue-500"
@@ -33,7 +33,7 @@ export function ThemeSwitcherButton() {
         } mode`}
       >
         <span
-          className={`absolute top-1 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center transform transition-transform duration-300 ${
+          className={`absolute top-1 w-8 h-[28px] rounded-full bg-white shadow-md flex items-center justify-center transform transition-transform duration-300 ${
             currentTheme === "dark" ? "translate-x-10" : "translate-x-0"
           }`}
         >

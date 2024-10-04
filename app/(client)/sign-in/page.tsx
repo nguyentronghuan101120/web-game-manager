@@ -13,6 +13,7 @@ import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import { useRouter } from "next/navigation";
 import { SignInRequest } from "@/src/data-source/auth/models/requests/sign-in-request";
 import Loading from "@/app/components/loading";
+import { LocalStorageKey } from "@/src/constants/local-storage-key";
 // import ReCAPTCHA from "react-google-recaptcha"; // Import ReCAPTCHA component
 
 interface SignInFormData {
@@ -43,14 +44,20 @@ export default function SignIn() {
       const response = await signInApi(data);
 
       if (rememberMe) {
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("password", data.password); // Consider security implications
+        localStorage.setItem(
+          LocalStorageKey.REMEMBER_ME_USERNAME,
+          data.username
+        );
+        localStorage.setItem(
+          LocalStorageKey.REMEMBER_ME_PASSWORD,
+          data.password
+        );
       } else {
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
+        localStorage.removeItem(LocalStorageKey.REMEMBER_ME_USERNAME);
+        localStorage.removeItem(LocalStorageKey.REMEMBER_ME_PASSWORD);
       }
       toast.success(response.data.message);
-      router.push("/home");
+      window.location.href = "/home";
     } catch (error) {
       toast.error((error as BaseResponse).message);
     } finally {
@@ -63,7 +70,7 @@ export default function SignIn() {
       {loading && <Loading />} {/* Show loading component when loading */}
       <form onSubmit={handleSignIn}>
         <InputField
-          label="Username"
+          label="Username/Email"
           type="text"
           {...register("username", { required: "Username is required" })}
           placeholder="Enter your username"

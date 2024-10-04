@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   const variantClasses =
     variant === "primary"
       ? "bg-blue-500 text-white"
-      : "bg-gray-500 text-white"; // Add more variants as needed
+      : "border-2 border-blue-500 text-blue-500"; // Secondary variant with border only
 
   return (
     <button
