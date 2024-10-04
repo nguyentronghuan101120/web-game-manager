@@ -38,22 +38,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <ThemeProvider>
+        {/* <IntlProviderWrapper> */}
         <body
           className={`${lexend.className} antialiased flex flex-col w-full`}
         >
           {" "}
           {/* Wrap the children with Providers */}
           <NavBar />
+          {/* <h1>
+            <FormattedMessage id="greeting" />
+          </h1> */}
           <div className="bg-white dark:bg-gray-900 flex flex-col items-center justify-center py-8">
             {children}
           </div>
           <Footer />
           <ToastContainer />
         </body>
+        {/* </IntlProviderWrapper> */}
       </ThemeProvider>
     </html>
   );
