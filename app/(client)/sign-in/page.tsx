@@ -31,7 +31,6 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false); // State for remember me checkbox
   // const [captchaValue, setCaptchaValue] = useState<string | null>(null); // State for captcha value
   const [loading, setLoading] = useState(false); // State to manage loading
-  const router = useRouter();
   async function handleSignIn(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true); // Set loading to true when the sign-up process starts

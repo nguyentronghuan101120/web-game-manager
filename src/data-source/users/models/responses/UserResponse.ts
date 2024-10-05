@@ -1,6 +1,6 @@
-export interface UserModel {
+export interface UserResponse {
   id: number;
   username: string;
   email: string;
-  status: string;
+  activated: number;
 }
