@@ -11,10 +11,12 @@ import {
   validatePassword,
   validateUsername,
 } from "@/src/utils/form-validate/form-validate";
+import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 
 interface CreateUserFormDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: (user: UserResponse) => void;
 }
 
 interface FormData {
@@ -27,6 +29,7 @@ interface FormData {
 export default function CreateUserFormDialog({
   isOpen,
   onClose,
+  onSuccess,
 }: CreateUserFormDialogProps) {
   const {
     register,
@@ -41,9 +44,8 @@ export default function CreateUserFormDialog({
     setLoading(true); // Set loading to true when the process starts
     try {
       const response = await createUserApi(data);
+      onSuccess(response.data.data as UserResponse);
       toast.success(response.data.message);
-      onClose(); // Close the dialog on success
-      window.location.reload();
     } catch (error) {
       toast.error((error as BaseResponse).message);
     } finally {

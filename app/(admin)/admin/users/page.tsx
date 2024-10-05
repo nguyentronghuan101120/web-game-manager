@@ -1,23 +1,24 @@
 "use client";
 
 import AppDialog from "@/app/components/app-dialog";
-import ErrorLabel from "@/app/components/error";
 import Loading from "@/app/components/loading";
 import AppTable from "@/app/components/table/app-table";
 import { TableColumnModel } from "@/app/components/table/table-colum-model";
 import {
-  createUserApi,
+  deleteUserApi,
   getUsersApi,
 } from "@/src/data-source/users/apis/user-api";
-import { UserResponse } from "@/src/data-source/users/models/responses/UserResponse";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import { useEffect, useState } from "react";
 import SignInFormDialog from "./create-user-form-dialog";
+import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
+import { toast } from "react-toastify";
+import ErrorLabel from "@/app/components/error-label";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<BaseResponse | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function UsersPage() {
         const result = await getUsersApi();
         setUsers(result.data.data ?? []);
       } catch (error) {
-        setError((error as BaseResponse).message);
+        setError(error as BaseResponse);
       } finally {
         setIsLoading(false);
       }
@@ -50,18 +51,49 @@ export default function UsersPage() {
     setIsDialogOpen(false);
   };
 
+  const handleDelete = async (userId: number) => {
+    setIsLoading(true);
+    try {
+      await deleteUserApi(userId);
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      toast.success("User deleted successfully");
+    } catch (error) {
+      toast.error((error as BaseResponse).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEdit = (userId: number) => {
+    setIsDialogOpen(true);
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 text-center">User Management</h1>
       {isLoading && <Loading />}
-      {error && <ErrorLabel message={error} />}
-      <AppTable headerColumns={headerColumns} items={users} onAdd={handleAdd} />
-      <AppDialog
-        type="form"
-        isOpen={isDialogOpen}
-      >
-        <SignInFormDialog isOpen={isDialogOpen} onClose={handleClose} />
-      </AppDialog>
+      {error && <ErrorLabel error={error} />}
+      {!error && (
+        <>
+          <AppTable
+            headerColumns={headerColumns}
+            items={users}
+            onAdd={handleAdd}
+            onDelete={(id) => handleDelete(id)}
+            onEdit={(id) => handleEdit(id)}
+          />
+          <AppDialog type="form" isOpen={isDialogOpen}>
+            <SignInFormDialog
+              isOpen={isDialogOpen}
+              onClose={handleClose}
+              onSuccess={(user) => {
+                setUsers((prevUsers) => [user, ...prevUsers]);
+                handleClose();
+              }}
+            />
+          </AppDialog>
+        </>
+      )}
     </div>
   );
 }

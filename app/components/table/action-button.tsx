@@ -7,7 +7,13 @@ import {
 } from "@nextui-org/react";
 import { FaEllipsisV } from "react-icons/fa";
 
-export default function ActionButton() {
+export default function ActionButton({
+  onDelete,
+  onEdit,
+}: {
+  onDelete?: () => void;
+  onEdit?: () => void;
+}) {
   return (
     <div>
       <Dropdown>
@@ -17,8 +23,8 @@ export default function ActionButton() {
           </Button>
         </DropdownTrigger>
         <DropdownMenu>
-          <DropdownItem>Edit</DropdownItem>
-          <DropdownItem>Delete</DropdownItem>
+          <DropdownItem onClick={onEdit}>Edit</DropdownItem>
+          <DropdownItem onClick={onDelete}>Delete</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </div>

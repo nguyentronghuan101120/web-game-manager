@@ -22,7 +22,7 @@ const TopContent = ({ onAdd }: { onAdd?: () => void }) => {
         />
         <div className="flex gap-3">
           <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+            <DropdownTrigger className="hidden sm:flex z-0">
               <Button
                 endContent={<FaChevronDown className="text-small" />}
                 variant="flat"
@@ -35,13 +35,14 @@ const TopContent = ({ onAdd }: { onAdd?: () => void }) => {
               aria-label="Table Columns"
               closeOnSelect={false}
               selectionMode="multiple"
+              className="z-0"
             >
               <DropdownItem>Active</DropdownItem>
               <DropdownItem>Inactive</DropdownItem>
             </DropdownMenu>
           </Dropdown>
           <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+            <DropdownTrigger className="hidden sm:flex z-0">
               <Button
                 endContent={<FaChevronDown className="text-small" />}
                 variant="flat"

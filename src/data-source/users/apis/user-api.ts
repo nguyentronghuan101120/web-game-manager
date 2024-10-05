@@ -5,8 +5,9 @@ import {
   errorResponse,
 } from "@/src/utils/network/models/common/base-response";
 import { AxiosError } from "axios";
-import { UserResponse } from "../models/responses/UserResponse";
-import { CreateUserRequest } from "../models/requests/CreateUserRequest";
+import { UserResponse } from "../models/responses/user-response";
+import { CreateUserRequest } from "../models/requests/create-user-request";
+import { UpdateUserRequest } from "../models/requests/update-user-request";
 
 export async function getUsersApi() {
   try {
@@ -24,6 +25,29 @@ export async function createUserApi(user: CreateUserRequest) {
     const result = await interceptor.post<BaseResponse<UserResponse>>(
       usersUrl,
       user
+    );
+    return result;
+  } catch (error) {
+    throw errorResponse(error as AxiosError);
+  }
+}
+
+export async function updateUserApi(user: UpdateUserRequest) {
+  try {
+    const result = await interceptor.put<BaseResponse<UserResponse>>(
+      usersUrl,
+      user
+    );
+    return result;
+  } catch (error) {
+    throw errorResponse(error as AxiosError);
+  }
+}
+
+export async function deleteUserApi(userId: number) {
+  try {
+    const result = await interceptor.delete<BaseResponse>(
+      usersUrl + `/${userId}`
     );
     return result;
   } catch (error) {

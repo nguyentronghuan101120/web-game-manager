@@ -19,6 +19,8 @@ interface AppTableProps {
   headerColumns: TableColumnModel[];
   items: any[];
   onAdd?: () => void;
+  onDelete?: (index: number) => void;
+  onEdit?: (index: number) => void;
 }
 
 const activatedColorMap: Record<string, ChipProps["color"]> = {
@@ -26,14 +28,25 @@ const activatedColorMap: Record<string, ChipProps["color"]> = {
   0: "danger",
 };
 
-export default function AppTable({ headerColumns, items, onAdd }: AppTableProps) {
+export default function AppTable({
+  headerColumns,
+  items,
+  onAdd,
+  onDelete,
+  onEdit,
+}: AppTableProps) {
   const renderCell = (item: any, columnKey: Key) => {
     const key = (columnKey as string).toLowerCase();
     const cellValue = item[key];
 
     switch (key) {
       case "actions":
-        return <ActionButton />;
+        return (
+          <ActionButton
+            onDelete={() => onDelete?.(item.id)}
+            onEdit={() => onEdit?.(item.id)}
+          />
+        );
 
       case "activated":
         return (
