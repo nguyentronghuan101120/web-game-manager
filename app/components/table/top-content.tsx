@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import { FaSearch, FaChevronDown, FaPlus } from "react-icons/fa";
 
-const TopContent = () => {
+const TopContent = ({ onAdd }: { onAdd?: () => void }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
@@ -59,7 +59,7 @@ const TopContent = () => {
               <DropdownItem>Inactive</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-          <Button color="primary" endContent={<FaPlus />}>
+          <Button color="primary" endContent={<FaPlus />} onClick={onAdd}>
             Add New
           </Button>
         </div>

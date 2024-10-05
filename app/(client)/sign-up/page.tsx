@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import Card from "../../components/card";
 import InputField from "../../components/input-field";
-import Button from "@/app/components/button";
 import Link from "next/link";
 import ErrorInputField from "@/app/components/error-input-field";
 import { toast } from "react-toastify";
@@ -12,6 +11,7 @@ import Loading from "@/app/components/loading"; // Import loading component
 import { signUpApi } from "@/src/data-source/auth/apis/auth-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import { useRouter } from "next/navigation";
+import AppButton from "@/app/components/app-button";
 interface SignUpFormData {
   email: string;
   username: string;
@@ -115,11 +115,11 @@ export default function SignUp() {
         )}
 
         <div className="flex justify-center">
-          <Button type="submit" disabled={loading}>
+          <AppButton type="submit" disabled={loading}>
             {" "}
             {/* Disable button when loading */}
             {loading ? "Loading..." : "Sign Up"} {/* Show loading text */}
-          </Button>
+          </AppButton>
         </div>
 
         <p className="mt-4 text-sm text-gray-600 flex justify-center">

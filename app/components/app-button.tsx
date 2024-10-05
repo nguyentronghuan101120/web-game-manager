@@ -5,7 +5,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary"; // Optional variant prop for styling
 }
 
-const Button: React.FC<ButtonProps> = ({
+const AppButton: React.FC<ButtonProps> = ({
   children,
   variant = "primary", // Default to primary variant
   className, // Allow additional class names
@@ -27,4 +27,4 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-export default Button;
+export default AppButton;

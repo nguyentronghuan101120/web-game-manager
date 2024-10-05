@@ -17,7 +17,6 @@ export default function ActionButton() {
           </Button>
         </DropdownTrigger>
         <DropdownMenu>
-          <DropdownItem>View</DropdownItem>
           <DropdownItem>Edit</DropdownItem>
           <DropdownItem>Delete</DropdownItem>
         </DropdownMenu>

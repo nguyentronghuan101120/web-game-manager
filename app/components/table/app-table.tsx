@@ -18,6 +18,7 @@ import ActionButton from "./action-button";
 interface AppTableProps {
   headerColumns: TableColumnModel[];
   items: any[];
+  onAdd?: () => void;
 }
 
 const activatedColorMap: Record<string, ChipProps["color"]> = {
@@ -25,7 +26,7 @@ const activatedColorMap: Record<string, ChipProps["color"]> = {
   0: "danger",
 };
 
-export default function AppTable({ headerColumns, items }: AppTableProps) {
+export default function AppTable({ headerColumns, items, onAdd }: AppTableProps) {
   const renderCell = (item: any, columnKey: Key) => {
     const key = (columnKey as string).toLowerCase();
     const cellValue = item[key];
@@ -65,7 +66,7 @@ export default function AppTable({ headerColumns, items }: AppTableProps) {
         wrapper: "max-h-[650px]",
       }}
       selectionMode="multiple"
-      topContent={<TopContent />}
+      topContent={<TopContent onAdd={onAdd} />}
       topContentPlacement="outside"
     >
       <TableHeader columns={updatedHeaderColumns}>

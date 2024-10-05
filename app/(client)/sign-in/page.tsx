@@ -3,17 +3,16 @@
 import { useForm } from "react-hook-form";
 import Card from "../../components/card";
 import InputField from "../../components/input-field";
-import Button from "@/app/components/button";
 import Link from "next/link";
 import ErrorInputField from "@/app/components/error-input-field";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { signInApi } from "@/src/data-source/auth/apis/auth-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
-import { useRouter } from "next/navigation";
 import { SignInRequest } from "@/src/data-source/auth/models/requests/sign-in-request";
 import Loading from "@/app/components/loading";
 import { LocalStorageKey } from "@/src/constants/local-storage-key";
+import AppButton from "@/app/components/app-button";
 // import ReCAPTCHA from "react-google-recaptcha"; // Import ReCAPTCHA component
 
 interface SignInFormData {
@@ -111,7 +110,7 @@ export default function SignIn() {
         </div> */}
 
         <div className="flex justify-center">
-          <Button type="submit">Sign In</Button> {/* Change type to submit */}
+          <AppButton type="submit">Sign In</AppButton> {/* Change type to submit */}
         </div>
 
         <p className="mt-4 text-sm text-gray-600 flex justify-center">

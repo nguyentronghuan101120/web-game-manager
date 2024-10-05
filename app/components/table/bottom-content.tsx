@@ -13,22 +13,13 @@ const BottomContent = () => {
         page={1}
         total={10}
         onChange={() => {}}
+        className="z-[0]"
       />
       <div className="hidden sm:flex w-[30%] justify-end gap-2">
-        <Button
-          isDisabled={true}
-          size="sm"
-          variant="flat"
-          onPress={() => {}}
-        >
+        <Button isDisabled={true} size="sm" variant="flat" onPress={() => {}}>
           Previous
         </Button>
-        <Button
-          isDisabled={true}
-          size="sm"
-          variant="flat"
-          onPress={() => {}}
-        >
+        <Button isDisabled={true} size="sm" variant="flat" onPress={() => {}}>
           Next
         </Button>
       </div>

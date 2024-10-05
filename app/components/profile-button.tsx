@@ -4,7 +4,7 @@ import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import { Link } from "@nextui-org/react";
 import { useEffect, useState, useRef } from "react";
 import { FaUser } from "react-icons/fa";
-import ConfirmDialog from "./dialog";
+import AppDialog from "./app-dialog";
 
 export default function ProfileButton() {
   const [username, setUsername] = useState("");
@@ -89,7 +89,8 @@ export default function ProfileButton() {
           </ul>
         </div>
       )}
-      <ConfirmDialog
+      <AppDialog
+        type="confirm"
         isOpen={isDialogOpen}
         onConfirm={handleConfirmLogout}
         onCancel={handleCancelLogout}
