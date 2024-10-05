@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  Chip,
+  ChipProps,
   Table,
   TableBody,
   TableCell,
@@ -11,16 +13,41 @@ import BottomContent from "./bottom-content";
 import TopContent from "./top-content";
 import { TableColumnModel } from "./table-colum-model";
 import { Key } from "react";
+import ActionButton from "./action-button";
 
 interface AppTableProps {
   headerColumns: TableColumnModel[];
   items: any[];
 }
 
+const activatedColorMap: Record<string, ChipProps["color"]> = {
+  1: "success",
+  0: "danger",
+};
+
 export default function AppTable({ headerColumns, items }: AppTableProps) {
   const renderCell = (item: any, columnKey: Key) => {
-    const cellValue = item[(columnKey as string).toLowerCase()];
-    return <p className="text-bold text-small">{cellValue}</p>;
+    const key = (columnKey as string).toLowerCase();
+    const cellValue = item[key];
+
+    switch (key) {
+      case "actions":
+        return <ActionButton />;
+
+      case "activated":
+        return (
+          <Chip
+            className="capitalize border-none gap-1 text-default-600"
+            color={activatedColorMap[cellValue]}
+            size="sm"
+            variant="dot"
+          >
+            {cellValue === 1 ? "Activated" : "Inactivated"}
+          </Chip>
+        );
+      default:
+        return <p className="text-bold text-small">{cellValue}</p>;
+    }
   };
 
   // Add action column header
