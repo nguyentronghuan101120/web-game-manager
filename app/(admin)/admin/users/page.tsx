@@ -10,19 +10,18 @@ import {
 } from "@/src/data-source/users/apis/user-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import { useEffect, useState } from "react";
-import SignInFormDialog from "./create-user-form-dialog";
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import { toast } from "react-toastify";
 import ErrorLabel from "@/app/components/error-label";
-import EditUserFormDialog from "./edit-user-form-dialog";
+import UserEditorFormDialog from "./user-editor-form-dialog";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<BaseResponse | null>(null);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isUserEditorDialogOpen, setIsUserEditorDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserResponse>();
 
   useEffect(() => {
@@ -48,12 +47,13 @@ export default function UsersPage() {
   ];
 
   const handleAdd = () => {
-    setIsCreateDialogOpen(true);
+    setIsEdit(false);
+
+    setIsUserEditorDialogOpen(true);
   };
 
   const handleClose = () => {
-    setIsCreateDialogOpen(false);
-    setIsEditDialogOpen(false);
+    setIsUserEditorDialogOpen(false);
     setIsDeleteDialogOpen(false);
   };
 
@@ -72,7 +72,9 @@ export default function UsersPage() {
   };
 
   const handleEdit = (userId: number) => {
-    setIsEditDialogOpen(true);
+    setIsEdit(true);
+
+    setIsUserEditorDialogOpen(true);
     setSelectedUser(users.find((user) => user.id === userId));
   };
 
@@ -95,32 +97,27 @@ export default function UsersPage() {
             onDelete={(id) => confirmDelete(id)}
             onEdit={(id) => handleEdit(id)}
           />
-          <AppDialog type="form" isOpen={isCreateDialogOpen}>
-            <SignInFormDialog
-              isOpen={isCreateDialogOpen}
-              onClose={handleClose}
-              onSuccess={(user) => {
-                setUsers((prevUsers) => [user, ...prevUsers]);
-                handleClose();
-              }}
-            />
-          </AppDialog>
 
           <AppDialog
             type="form"
-            isOpen={isEditDialogOpen}
+            isOpen={isUserEditorDialogOpen}
             className="max-w-full max-h-full"
           >
-            <EditUserFormDialog
-              isOpen={isEditDialogOpen}
+            <UserEditorFormDialog
+              isOpen={isUserEditorDialogOpen}
               onClose={handleClose}
               onSuccess={(user: UserResponse) => {
-                setUsers((prevUsers) =>
-                  prevUsers.map((u) => (u.id === user.id ? user : u))
-                );
+                if (isEdit) {
+                  setUsers((prevUsers) =>
+                    prevUsers.map((u) => (u.id === user.id ? user : u))
+                  );
+                } else {
+                  setUsers((prevUsers) => [user, ...prevUsers]);
+                }
                 handleClose();
               }}
               user={selectedUser as UserResponse}
+              isEdit={isEdit}
             />
           </AppDialog>
           <AppDialog

@@ -4,7 +4,10 @@ import AppButton from "@/app/components/app-button";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
-import { editUserApi } from "@/src/data-source/users/apis/user-api";
+import {
+  createUserApi,
+  editUserApi,
+} from "@/src/data-source/users/apis/user-api";
 import {
   validateConfirmPassword,
   validateEmail,
@@ -14,11 +17,12 @@ import {
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import AppDropdown from "@/app/components/app-dropdown";
 
-interface EditUserFormDialogProps {
+interface UserEditorFormDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: (user: UserResponse) => void;
   user: UserResponse | null;
+  isEdit?: boolean;
 }
 
 interface FormData {
@@ -26,42 +30,74 @@ interface FormData {
   email: string;
   activated: number;
   role: number;
-  password: string;
-  confirmPassword: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
-export default function EditUserFormDialog({
+export default function UserEditorFormDialog({
   isOpen,
   onClose,
   onSuccess,
   user,
-}: EditUserFormDialogProps) {
+  isEdit = false,
+}: UserEditorFormDialogProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
-    setValue, // Added setValue to update form values
+    setValue,
   } = useForm<FormData>({
-    defaultValues: {
-      username: user?.username,
-      email: user?.email,
-      activated: user?.activated,
-      role: user?.role,
-      password: "",
-      confirmPassword: "",
-    },
+    defaultValues: isEdit
+      ? {
+          username: user?.username,
+          email: user?.email,
+          activated: user?.activated,
+          role: user?.role,
+          password: "",
+          confirmPassword: "",
+        }
+      : {
+          username: "",
+          email: "",
+          activated: 1,
+          role: 0,
+          password: "",
+          confirmPassword: "",
+        },
   });
 
-  const [loading, setLoading] = useState(false); // State to manage loading
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    setLoading(true); // Set loading to true when the process starts
+  const handleCreateUser = async (data: FormData) => {
+    setLoading(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { confirmPassword, ...userData } = data; // Remove confirmPassword
-      console.log(userData);
-      const response = await editUserApi(user?.id as number, userData); // Send only userData
+      const response = await createUserApi({
+        username: data.username,
+        email: data.email,
+        activated: data.activated,
+        role: data.role,
+        password: data.password as string,
+      });
+      onSuccess(response.data.data as UserResponse);
+      toast.success("Create user successfully");
+    } catch (error) {
+      toast.error((error as BaseResponse).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditUser = async (data: FormData) => {
+    setLoading(true);
+    try {
+      const response = await editUserApi(user?.id as number, {
+        username: data.username,
+        email: data.email,
+        activated: data.activated,
+        role: data.role,
+        password: (data.password?.length || 0) > 0 ? data.password : undefined,
+      });
       onSuccess(response.data.data as UserResponse);
       toast.success("Edit user successfully");
     } catch (error) {
@@ -70,14 +106,24 @@ export default function EditUserFormDialog({
       setLoading(false);
     }
   };
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (isEdit) {
+      handleEditUser(data);
+    } else {
+      handleCreateUser(data);
+    }
+  };
+
   const statusOptions = [
-    { label: "Active", value: "1" },
     { label: "Inactive", value: "0" },
+
+    { label: "Active", value: "1" },
   ];
 
   const roleOptions = [
-    { label: "Admin", value: "1" },
     { label: "User", value: "0" },
+
+    { label: "Admin", value: "1" },
   ];
 
   if (!isOpen) return null;
@@ -85,7 +131,7 @@ export default function EditUserFormDialog({
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4 text-center">
-        Edit User
+        {isEdit ? "Edit User" : "Create User"}
       </h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-4">
@@ -111,7 +157,9 @@ export default function EditUserFormDialog({
           <InputField
             label="Password"
             type="password"
-            register={register("password", { validate: validatePassword })}
+            register={register("password", {
+              validate: (value) => validatePassword(value, isEdit),
+            })}
             name="password"
             error={errors.password}
             placeholder="Enter your password"
@@ -121,7 +169,7 @@ export default function EditUserFormDialog({
             type="password"
             register={register("confirmPassword", {
               validate: (value) =>
-                validateConfirmPassword(value, getValues("password")),
+                validateConfirmPassword(value, getValues("password"), isEdit),
             })}
             name="confirmPassword"
             error={errors.confirmPassword}
@@ -136,7 +184,7 @@ export default function EditUserFormDialog({
               statusOptions.find(
                 (option) => option.value === String(getValues("activated"))
               ) || statusOptions[0]
-            } // Set selected based on form value
+            }
             setSelected={(selected) => {
               setValue("activated", Number(selected.value));
             }}
@@ -149,7 +197,7 @@ export default function EditUserFormDialog({
               roleOptions.find(
                 (option) => option.value === String(getValues("role"))
               ) || roleOptions[0]
-            } // Set selected based on form value
+            }
             setSelected={(selected) => {
               setValue("role", Number(selected.value));
             }}
@@ -162,7 +210,7 @@ export default function EditUserFormDialog({
             Cancel
           </AppButton>
           <AppButton variant="primary" disabled={loading} type="submit">
-            {loading ? "Loading..." : "Edit User"}
+            {loading ? "Loading..." : isEdit ? "Update" : "Create"}
           </AppButton>
         </div>
       </form>
