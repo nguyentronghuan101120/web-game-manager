@@ -14,12 +14,16 @@ import SignInFormDialog from "./create-user-form-dialog";
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import { toast } from "react-toastify";
 import ErrorLabel from "@/app/components/error-label";
+import EditUserFormDialog from "./edit-user-form-dialog";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<BaseResponse | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserResponse>();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -44,11 +48,13 @@ export default function UsersPage() {
   ];
 
   const handleAdd = () => {
-    setIsDialogOpen(true);
+    setIsCreateDialogOpen(true);
   };
 
   const handleClose = () => {
-    setIsDialogOpen(false);
+    setIsCreateDialogOpen(false);
+    setIsEditDialogOpen(false);
+    setIsDeleteDialogOpen(false);
   };
 
   const handleDelete = async (userId: number) => {
@@ -61,11 +67,18 @@ export default function UsersPage() {
       toast.error((error as BaseResponse).message);
     } finally {
       setIsLoading(false);
+      handleClose();
     }
   };
 
   const handleEdit = (userId: number) => {
-    setIsDialogOpen(true);
+    setIsEditDialogOpen(true);
+    setSelectedUser(users.find((user) => user.id === userId));
+  };
+
+  const confirmDelete = (userId: number) => {
+    setIsDeleteDialogOpen(true);
+    setSelectedUser(users.find((user) => user.id === userId));
   };
 
   return (
@@ -79,12 +92,12 @@ export default function UsersPage() {
             headerColumns={headerColumns}
             items={users}
             onAdd={handleAdd}
-            onDelete={(id) => handleDelete(id)}
+            onDelete={(id) => confirmDelete(id)}
             onEdit={(id) => handleEdit(id)}
           />
-          <AppDialog type="form" isOpen={isDialogOpen}>
+          <AppDialog type="form" isOpen={isCreateDialogOpen}>
             <SignInFormDialog
-              isOpen={isDialogOpen}
+              isOpen={isCreateDialogOpen}
               onClose={handleClose}
               onSuccess={(user) => {
                 setUsers((prevUsers) => [user, ...prevUsers]);
@@ -92,6 +105,30 @@ export default function UsersPage() {
               }}
             />
           </AppDialog>
+
+          <AppDialog
+            type="form"
+            isOpen={isEditDialogOpen}
+            className="max-w-full max-h-full"
+          >
+            <EditUserFormDialog
+              isOpen={isEditDialogOpen}
+              onClose={handleClose}
+              onSuccess={(user: UserResponse) => {
+                setUsers((prevUsers) =>
+                  prevUsers.map((u) => (u.id === user.id ? user : u))
+                );
+                handleClose();
+              }}
+              user={selectedUser as UserResponse}
+            />
+          </AppDialog>
+          <AppDialog
+            type="confirm"
+            isOpen={isDeleteDialogOpen}
+            onConfirm={() => handleDelete(selectedUser?.id as number)}
+            onCancel={handleClose}
+          />
         </>
       )}
     </div>

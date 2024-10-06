@@ -32,10 +32,10 @@ export async function createUserApi(user: CreateUserRequest) {
   }
 }
 
-export async function updateUserApi(user: UpdateUserRequest) {
+export async function editUserApi(id: number, user: UpdateUserRequest) {
   try {
     const result = await interceptor.put<BaseResponse<UserResponse>>(
-      usersUrl,
+      usersUrl + `/${id}`,
       user
     );
     return result;
