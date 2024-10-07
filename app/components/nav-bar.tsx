@@ -1,13 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { ThemeSwitcherButton } from "./theme-switcher-button";
-import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import ProfileButton from "./profile-button";
 import { ClientRoutes } from "@/src/constants/routes";
+import AppButton from "./app-button";
+import { TextConstant } from "@/src/constants/text-constant";
+import { useEffect, useState } from "react";
+import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
 
 export default function NavBar() {
-  const isLoggedIn = localStorage.getItem(LocalStorageKey.USER_DATA);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const storedUserData = LocalStorageHelper.getUser();
+    setIsLoggedIn(!!storedUserData);
+  }, []);
 
   return (
     <nav className="bg-white dark:bg-gray-900 w-full top-0 start-0 border-b border-gray-200 dark:border-gray-600">
@@ -17,21 +23,23 @@ export default function NavBar() {
           {isLoggedIn ? (
             <ProfileButton />
           ) : (
-            <Link
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              href={ClientRoutes.SIGN_IN}
+            <AppButton
+              variant="primary"
+              className="text-sm px-4 py-2"
+              onClick={() => {
+                window.location.href = ClientRoutes.SIGN_IN;
+              }}
             >
-              Login / Register
-            </Link>
+              {TextConstant.SIGN_IN}
+            </AppButton>
           )}
-          <Link
-            type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            href={ClientRoutes.SIGN_IN}
+          <AppButton
+            variant="primary"
+            className="text-sm px-4 py-2"
+            // onClick={() => (window.location.href = ClientRoutes.SIGN_IN)}
           >
-            Download
-          </Link>
+            {TextConstant.DOWNLOAD}
+          </AppButton>
           <button
             data-collapse-toggle="navbar-sticky"
             type="button"
@@ -58,7 +66,7 @@ export default function NavBar() {
           </button>
         </div>
         <div
-          className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+          className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 "
           id="navbar-sticky"
         >
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">

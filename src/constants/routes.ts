@@ -7,6 +7,7 @@ export enum ClientRoutes {
 }
 
 export enum AdminRoutes {
+  ADMIN = "/admin",
   DASHBOARD = "/admin/dashboard",
   USERS = "/admin/users",
   SETTINGS = "/admin/settings",

@@ -1,6 +1,7 @@
 // ConfirmDialog.js
 import React from "react";
 import AppButton from "./app-button";
+import { TextConstant } from "@/src/constants/text-constant";
 
 const AppDialog = ({
   isOpen,
@@ -9,6 +10,8 @@ const AppDialog = ({
   type = "confirm",
   children,
   className = "", // Added className prop
+  title, // Added title prop
+  subtitle, // Added subtitle prop
 }: {
   isOpen: boolean;
   onConfirm?: () => void;
@@ -16,11 +19,19 @@ const AppDialog = ({
   type: "confirm" | "form";
   children?: React.ReactNode; // Make children optional
   className?: string; // Make className optional
+  title?: string; // Make title optional
+  subtitle?: string; // Make subtitle optional
 }) => {
   if (!isOpen) return null;
 
   if (type === "form" && !children) {
     throw new Error("Children must be provided when type is 'form'.");
+  }
+
+  if (type === "confirm" && (!title || !subtitle)) {
+    throw new Error(
+      "Title and subtitle must be provided when type is 'confirm'."
+    );
   }
 
   return (
@@ -32,8 +43,10 @@ const AppDialog = ({
       >
         {type === "confirm" ? (
           <ConfirmDialogContent
-            title="Are you sure?"
-            message="Do you want to proceed with this action?"
+            title={title || TextConstant.ARE_YOU_SURE}
+            subtitle={
+              subtitle || TextConstant.DO_YOU_WANT_TO_PROCEED_WITH_THIS_ACTION
+            }
             onConfirm={onConfirm ?? (() => {})}
             onCancel={onCancel ?? (() => {})}
           />
@@ -47,21 +60,23 @@ const AppDialog = ({
 
 const ConfirmDialogContent = ({
   title,
-  message,
+  subtitle,
   onConfirm,
   onCancel,
 }: {
   title: string;
-  message: string;
+  subtitle: string;
   onConfirm: () => void;
   onCancel: () => void;
 }) => {
   return (
     <>
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white ">
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
         {title}
       </h2>
-      <p className="text-gray-900 dark:text-white mt-2">{message}</p>
+      <p className="text-gray-900 dark:text-white mt-2 text-center">
+        {subtitle}
+      </p>
       <div className="flex justify-end space-x-3 mt-4">
         <AppButton variant="secondary" onClick={onCancel}>
           Cancel

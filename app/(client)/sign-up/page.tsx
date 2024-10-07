@@ -5,7 +5,7 @@ import Card from "../../components/card";
 import InputField from "../../components/input-field";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { useState } from "react"; // Import useState for loading state
+import { useEffect, useState } from "react"; // Import useState for loading state
 import Loading from "@/app/components/loading"; // Import loading component
 import { signUpApi } from "@/src/data-source/auth/apis/auth-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
@@ -17,8 +17,9 @@ import {
   validateConfirmPassword,
   validateEmail,
   validatePassword,
-} from "@/src/utils/form-validate/form-validate";
-import { validateUsername } from "@/src/utils/form-validate/form-validate";
+} from "@/src/utils/others/form-validate/form-validate";
+import { validateUsername } from "@/src/utils/others/form-validate/form-validate";
+import { CheckUserLoggedIn } from "@/src/utils/others/others-util";
 interface SignUpFormData {
   email: string;
   username: string;
@@ -52,6 +53,9 @@ export default function SignUp() {
     }
   }
 
+  useEffect(() => {
+    CheckUserLoggedIn();
+  }, []);
   return (
     <Card>
       {loading && <Loading />} {/* Show loading component when loading */}

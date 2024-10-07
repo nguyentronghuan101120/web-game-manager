@@ -13,21 +13,23 @@ const AppButton: React.FC<ButtonProps> = ({
   endIcon, // Icon to be displayed at the end
   ...props // Spread other button props
 }) => {
-  const baseClasses = "p-2 rounded w-full  items-center justify-between"; // Added flex for alignment
+  const baseClasses =
+    "p-3 rounded-lg flex items-center justify-center transition-all duration-300 ease-in-out transform active:scale-95 focus:outline-none focus:ring-4"; // Transition for smooth interactions
+
   const variantClasses =
     variant === "primary"
-      ? "bg-blue-500 text-white"
-      : "border-2 border-blue-500 text-blue-500"; // Secondary variant with border only
+      ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-300 shadow-md"
+      : "border-2 border-blue-500 text-blue-500 hover:bg-blue-100 focus:ring-blue-300 shadow-md"; // Enhanced hover/focus effects
 
   return (
     <button
-      className={`${baseClasses} ${variantClasses} ${className} ${
-        endIcon ? "flex" : ""
-      }`} // Combine classes
+      className={`${baseClasses} ${variantClasses} ${className || "w-full"} ${
+        endIcon ? "flex justify-between" : ""
+      } font-bold`} // Combine classes and adjust layout for endIcon
       {...props} // Spread any other props (like onClick, disabled, type, etc.)
     >
-      {children}
-      {endIcon && <span className="ml-[4px]">{endIcon}</span>}{" "}
+      <span className="flex items-center justify-center">{children}</span>
+      {endIcon && <span className="ml-2">{endIcon}</span>}{" "}
       {/* Render icon if provided */}
     </button>
   );

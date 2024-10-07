@@ -1,24 +1,25 @@
 "use client";
 
-import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import { Link } from "@nextui-org/react";
 import { useEffect, useState, useRef } from "react";
 import { FaUser } from "react-icons/fa";
 import AppDialog from "./app-dialog";
 import { ClientRoutes } from "@/src/constants/routes";
+import AdminPanelButton from "./admin-pannel-button";
+import { TextConstant } from "@/src/constants/text-constant";
+import { LogoutUser } from "@/src/utils/others/others-util";
+import { SignInResponse } from "@/src/data-source/auth/models/responses/sign-in-response";
+import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
 
 export default function ProfileButton() {
-  const [username, setUsername] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null); // Add explicit type here
+  const [userData, setUserData] = useState<SignInResponse | null>(null);
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem(LocalStorageKey.USER_DATA);
-
-    if (storedUserData) {
-      setUsername(JSON.parse(storedUserData).user.username);
-    }
+    const userData = LocalStorageHelper.getUser();
+    setUserData(userData);
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -42,8 +43,7 @@ export default function ProfileButton() {
   };
 
   const handleConfirmLogout = () => {
-    window.location.href = ClientRoutes.HOME;
-    localStorage.removeItem(LocalStorageKey.USER_DATA);
+    LogoutUser();
     setIsDialogOpen(false);
   };
 
@@ -58,11 +58,21 @@ export default function ProfileButton() {
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         <FaUser className="text-gray-700 transition-colors duration-300 mr-2" />
-        hi, {username}
+        hi, {userData?.user?.username ?? "Guest"}
       </span>
       {dropdownOpen && (
-        <div className="absolute right-0 left-1 mt-10 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20">
-          <ul className="py-1">
+        <div
+          className={`absolute right-0 left-1 mt-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20 ${
+            userData?.user.role === 1 ? "w-52" : "w-48"
+          }`}
+        >
+          <ul className="py-1 rounded-lg">
+            {userData?.user.role === 1 && (
+              <li>
+                <AdminPanelButton />
+              </li>
+            )}
+
             <li>
               <Link
                 href={ClientRoutes.PROFILE}
@@ -90,11 +100,14 @@ export default function ProfileButton() {
           </ul>
         </div>
       )}
+
       <AppDialog
         type="confirm"
         isOpen={isDialogOpen}
         onConfirm={handleConfirmLogout}
         onCancel={handleCancelLogout}
+        title={TextConstant.ARE_YOU_SURE}
+        subtitle={TextConstant.DO_YOU_WANT_TO_LOGOUT}
       />
     </div>
   );

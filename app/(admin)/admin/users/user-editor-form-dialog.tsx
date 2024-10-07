@@ -13,7 +13,7 @@ import {
   validateEmail,
   validatePassword,
   validateUsername,
-} from "@/src/utils/form-validate/form-validate";
+} from "@/src/utils/others/form-validate/form-validate";
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import AppDropdown from "@/app/components/app-dropdown";
 import { TextConstant } from "@/src/constants/text-constant";

@@ -26,4 +26,9 @@ export enum TextConstant {
   STATUS = "Status",
   ROLE = "Role",
   CANCEL = "Cancel",
+  ADMIN_PANEL = "Admin Panel",
+  DO_YOU_WANT_TO_PROCEED_WITH_THIS_ACTION = "Do you want to proceed with this action?",
+  ARE_YOU_SURE = "Are you sure?",
+  DO_YOU_WANT_TO_LOGOUT = "Do you want to logout?",
+  DOWNLOAD = "Download",
 }
