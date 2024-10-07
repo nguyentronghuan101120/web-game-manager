@@ -5,6 +5,7 @@ import { Link } from "@nextui-org/react";
 import { useEffect, useState, useRef } from "react";
 import { FaUser } from "react-icons/fa";
 import AppDialog from "./app-dialog";
+import { ClientRoutes } from "@/src/constants/routes";
 
 export default function ProfileButton() {
   const [username, setUsername] = useState("");
@@ -41,7 +42,7 @@ export default function ProfileButton() {
   };
 
   const handleConfirmLogout = () => {
-    window.location.href = "/home";
+    window.location.href = ClientRoutes.HOME;
     localStorage.removeItem(LocalStorageKey.USERNAME);
     setIsDialogOpen(false);
   };
@@ -64,7 +65,7 @@ export default function ProfileButton() {
           <ul className="py-1">
             <li>
               <Link
-                href="/profile"
+                href={ClientRoutes.PROFILE}
                 className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105"
               >
                 Profile
@@ -72,7 +73,7 @@ export default function ProfileButton() {
             </li>
             <li>
               <Link
-                href="/settings"
+                href={ClientRoutes.SETTINGS}
                 className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105"
               >
                 Settings

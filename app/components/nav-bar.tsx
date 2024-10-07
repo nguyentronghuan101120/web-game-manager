@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ThemeSwitcherButton } from "./theme-switcher-button";
 import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import ProfileButton from "./profile-button";
+import { ClientRoutes } from "@/src/constants/routes";
 
 export default function NavBar() {
   const isLoggedIn = localStorage.getItem(LocalStorageKey.USERNAME);
@@ -19,7 +20,7 @@ export default function NavBar() {
             <Link
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              href="/sign-in"
+              href={ClientRoutes.SIGN_IN}
             >
               Login / Register
             </Link>
@@ -27,7 +28,7 @@ export default function NavBar() {
           <Link
             type="button"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            href="/login"
+            href={ClientRoutes.SIGN_IN}
           >
             Download
           </Link>
@@ -63,7 +64,7 @@ export default function NavBar() {
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li>
               <a
-                href="/home"
+                href={ClientRoutes.HOME}
                 className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
                 aria-current="page"
               >

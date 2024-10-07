@@ -4,40 +4,40 @@ import { useForm } from "react-hook-form";
 import Card from "../../components/card";
 import InputField from "../../components/input-field";
 import Link from "next/link";
-import ErrorInputField from "@/app/components/error-input-field";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { signInApi } from "@/src/data-source/auth/apis/auth-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
-import { SignInRequest } from "@/src/data-source/auth/models/requests/sign-in-request";
 import Loading from "@/app/components/loading";
 import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import AppButton from "@/app/components/app-button";
+import { ClientRoutes } from "@/src/constants/routes";
+import { TextConstant } from "@/src/constants/text-constant";
+import {
+  validatePassword,
+  validateUsername,
+} from "@/src/utils/form-validate/form-validate";
 // import ReCAPTCHA from "react-google-recaptcha"; // Import ReCAPTCHA component
 
 interface SignInFormData {
   username: string;
   password: string;
-  rememberMe: boolean; // Added rememberMe field
 }
 
 export default function SignIn() {
   const {
     register,
+    handleSubmit,
     formState: { errors },
   } = useForm<SignInFormData>();
 
-  const [rememberMe, setRememberMe] = useState(false); // State for remember me checkbox
+  const [rememberMe, setRememberMe] = useState(
+    localStorage.getItem(LocalStorageKey.REMEMBER_ME_USERNAME) !== null
+  ); // State for remember me checkbox
   // const [captchaValue, setCaptchaValue] = useState<string | null>(null); // State for captcha value
   const [loading, setLoading] = useState(false); // State to manage loading
-  async function handleSignIn(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSignIn(data: SignInFormData) {
     setLoading(true); // Set loading to true when the sign-up process starts
-    const formData = new FormData(event.currentTarget);
-    const data: SignInRequest = {
-      username: formData.get("username") as string,
-      password: formData.get("password") as string,
-    };
     try {
       const response = await signInApi(data);
 
@@ -55,7 +55,7 @@ export default function SignIn() {
         localStorage.removeItem(LocalStorageKey.REMEMBER_ME_PASSWORD);
       }
       toast.success(response.data.message);
-      window.location.href = "/home";
+      window.location.href = ClientRoutes.HOME;
     } catch (error) {
       toast.error((error as BaseResponse).message);
     } finally {
@@ -66,39 +66,38 @@ export default function SignIn() {
   return (
     <Card>
       {loading && <Loading />} {/* Show loading component when loading */}
-      <form onSubmit={handleSignIn}>
+      <form onSubmit={handleSubmit(handleSignIn)}>
         <InputField
-          label="Username/Email"
+          label={TextConstant.USERNAME_EMAIL}
           type="text"
-          {...register("username", { required: "Username is required" })}
-          placeholder="Enter your username"
+          register={register("username", {
+            validate: (value) => validateUsername(value),
+          })}
+          name="username"
+          error={errors.username}
+          placeholder={TextConstant.USERNAME_EMAIL_PLACEHOLDER}
         />
-        {errors.username && <ErrorInputField error={errors.username.message} />}
 
         <InputField
-          label="Password"
+          label={TextConstant.PASSWORD}
           type="password"
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 5,
-              message: "Password must be more than 4 characters",
-            },
+          register={register("password", {
+            validate: (value) => validatePassword(value, false),
           })}
-          placeholder="Enter your password"
+          name="password"
+          error={errors.password}
+          placeholder={TextConstant.PASSWORD_PLACEHOLDER}
         />
-        {errors.password && <ErrorInputField error={errors.password.message} />}
 
-        <div className="flex items-center">
+        <div className="flex items-center pb-6">
           <input
             type="checkbox"
             id="rememberMe"
-            {...register("rememberMe")}
             checked={rememberMe}
             onChange={() => setRememberMe(!rememberMe)} // Toggle remember me state
           />
           <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-600">
-            Remember Me
+            {TextConstant.REMEMBER_ME}
           </label>
         </div>
         {/* 
@@ -110,13 +109,14 @@ export default function SignIn() {
         </div> */}
 
         <div className="flex justify-center">
-          <AppButton type="submit">Sign In</AppButton> {/* Change type to submit */}
+          <AppButton type="submit">{TextConstant.SIGN_IN}</AppButton>{" "}
+          {/* Change type to submit */}
         </div>
 
         <p className="mt-4 text-sm text-gray-600 flex justify-center">
-          You do not have an account?{" "}
-          <Link href="/sign-up" className="text-blue-500 ml-1">
-            Register
+          {TextConstant.DO_NOT_HAVE_AN_ACCOUNT}
+          <Link href={ClientRoutes.SIGN_UP} className="text-blue-500 ml-1">
+            {TextConstant.SIGN_UP}
           </Link>
         </p>
       </form>

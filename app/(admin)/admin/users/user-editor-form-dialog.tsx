@@ -16,6 +16,7 @@ import {
 } from "@/src/utils/form-validate/form-validate";
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import AppDropdown from "@/app/components/app-dropdown";
+import { TextConstant } from "@/src/constants/text-constant";
 
 interface UserEditorFormDialogProps {
   isOpen: boolean;
@@ -136,36 +137,40 @@ export default function UserEditorFormDialog({
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-4">
           <InputField
-            label="Username"
+            label={TextConstant.USERNAME}
             type="text"
-            register={register("username", { validate: validateUsername })}
+            register={register("username", {
+              validate: (value) => validateUsername(value),
+            })}
             name="username"
             error={errors.username}
-            placeholder="Enter your username"
+            placeholder={TextConstant.USERNAME_PLACEHOLDER}
           />
           <InputField
-            label="Email"
+            label={TextConstant.EMAIL}
             type="email"
-            register={register("email", { validate: validateEmail })}
+            register={register("email", {
+              validate: (value) => validateEmail(value),
+            })}
             name="email"
             error={errors.email}
-            placeholder="Enter your email"
+            placeholder={TextConstant.EMAIL_PLACEHOLDER}
           />
         </div>
 
         <div className="flex gap-4">
           <InputField
-            label="Password"
+            label={TextConstant.PASSWORD}
             type="password"
             register={register("password", {
               validate: (value) => validatePassword(value, isEdit),
             })}
             name="password"
             error={errors.password}
-            placeholder="Enter your password"
+            placeholder={TextConstant.PASSWORD_PLACEHOLDER}
           />
           <InputField
-            label="Confirm Password"
+            label={TextConstant.CONFIRM_PASSWORD}
             type="password"
             register={register("confirmPassword", {
               validate: (value) =>
@@ -173,7 +178,7 @@ export default function UserEditorFormDialog({
             })}
             name="confirmPassword"
             error={errors.confirmPassword}
-            placeholder="Enter your confirm password"
+            placeholder={TextConstant.CONFIRM_PASSWORD_PLACEHOLDER}
           />
         </div>
 
@@ -188,7 +193,7 @@ export default function UserEditorFormDialog({
             setSelected={(selected) => {
               setValue("activated", Number(selected.value));
             }}
-            label="Status"
+            label={TextConstant.STATUS}
             className="mb-2"
           />
           <AppDropdown
@@ -201,13 +206,13 @@ export default function UserEditorFormDialog({
             setSelected={(selected) => {
               setValue("role", Number(selected.value));
             }}
-            label="Role"
+            label={TextConstant.ROLE}
           />
         </div>
 
         <div className="flex justify-end space-x-3 mt-4">
           <AppButton variant="secondary" onClick={onClose} disabled={loading}>
-            Cancel
+            {TextConstant.CANCEL}
           </AppButton>
           <AppButton variant="primary" disabled={loading} type="submit">
             {loading ? "Loading..." : isEdit ? "Update" : "Create"}

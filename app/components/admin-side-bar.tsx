@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FaCog, FaSignOutAlt, FaTachometerAlt, FaUser } from "react-icons/fa";
 import { useState } from "react";
+import { AdminRoutes } from "@/src/constants/routes";
 
 export default function AdminSideBar({ isOpen }: { isOpen: boolean }) {
   return (
@@ -22,9 +23,9 @@ export default function AdminSideBar({ isOpen }: { isOpen: boolean }) {
 }
 
 const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: <FaTachometerAlt /> },
-  { href: "/admin/users", label: "Users", icon: <FaUser /> },
-  { href: "/admin/settings", label: "Settings", icon: <FaCog /> },
+  { href: AdminRoutes.DASHBOARD, label: "Dashboard", icon: <FaTachometerAlt /> },
+  { href: AdminRoutes.USERS, label: "Users", icon: <FaUser /> },
+  { href: AdminRoutes.SETTINGS, label: "Settings", icon: <FaCog /> },
   { href: "#", label: "Logout", icon: <FaSignOutAlt /> },
 ];
 

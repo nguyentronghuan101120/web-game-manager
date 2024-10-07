@@ -1,4 +1,3 @@
-import { usersUrl } from "@/src/constants/api-url";
 import interceptor from "@/src/utils/network/interceptor/interceptor";
 import {
   BaseResponse,
@@ -7,11 +6,12 @@ import {
 import { AxiosError } from "axios";
 import { UserResponse } from "../models/responses/user-response";
 import { UserEditorRequest } from "../models/requests/user-editor-request";
+import { AdminApiUrl } from "@/src/constants/api-url";
 
 export async function getUsersApi() {
   try {
     const result = await interceptor.get<BaseResponse<UserResponse[]>>(
-      usersUrl
+      AdminApiUrl.USERS
     );
     return result;
   } catch (error) {
@@ -22,7 +22,7 @@ export async function getUsersApi() {
 export async function createUserApi(user: UserEditorRequest) {
   try {
     const result = await interceptor.post<BaseResponse<UserResponse>>(
-      usersUrl,
+      AdminApiUrl.USERS,
       user
     );
     return result;
@@ -34,7 +34,7 @@ export async function createUserApi(user: UserEditorRequest) {
 export async function editUserApi(id: number, user: UserEditorRequest) {
   try {
     const result = await interceptor.put<BaseResponse<UserResponse>>(
-      usersUrl + `/${id}`,
+      AdminApiUrl.USERS + `/${id}`,
       user
     );
     return result;
@@ -46,7 +46,7 @@ export async function editUserApi(id: number, user: UserEditorRequest) {
 export async function deleteUserApi(userId: number) {
   try {
     const result = await interceptor.delete<BaseResponse>(
-      usersUrl + `/${userId}`
+      AdminApiUrl.USERS + `/${userId}`
     );
     return result;
   } catch (error) {
