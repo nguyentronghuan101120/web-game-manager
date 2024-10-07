@@ -29,8 +29,8 @@ export async function signInApi(data: SignInRequest) {
       data
     );
     localStorage.setItem(
-      LocalStorageKey.USERNAME,
-      result.data.data?.username ?? ""
+      LocalStorageKey.USER_DATA,
+      JSON.stringify(result.data.data)
     );
     return result;
   } catch (error) {

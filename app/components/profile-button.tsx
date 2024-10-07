@@ -14,10 +14,10 @@ export default function ProfileButton() {
   const dropdownRef = useRef<HTMLDivElement>(null); // Add explicit type here
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem(LocalStorageKey.USERNAME);
+    const storedUserData = localStorage.getItem(LocalStorageKey.USER_DATA);
 
-    if (storedUsername) {
-      setUsername(storedUsername);
+    if (storedUserData) {
+      setUsername(JSON.parse(storedUserData).user.username);
     }
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,7 +43,7 @@ export default function ProfileButton() {
 
   const handleConfirmLogout = () => {
     window.location.href = ClientRoutes.HOME;
-    localStorage.removeItem(LocalStorageKey.USERNAME);
+    localStorage.removeItem(LocalStorageKey.USER_DATA);
     setIsDialogOpen(false);
   };
 
