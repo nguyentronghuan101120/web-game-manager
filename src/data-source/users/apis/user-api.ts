@@ -37,6 +37,7 @@ export async function editUserApi(id: number, user: UserEditorRequest) {
       AdminApiUrl.USERS + `/${id}`,
       user
     );
+
     return result;
   } catch (error) {
     throw errorResponse(error as AxiosError);

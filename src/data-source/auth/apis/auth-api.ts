@@ -5,11 +5,11 @@ import {
   BaseResponse,
   errorResponse,
 } from "@/src/utils/network/models/common/base-response";
-import { SignInResponse } from "../models/responses/sign-in-response";
 import { AxiosError } from "axios";
 import { ClientApiUrl } from "@/src/constants/api-url";
 
 import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
+import { SignInResponse } from "../models/responses/sign-in-response";
 export async function signUpApi(data: SignUpRequest) {
   try {
     const result = await interceptor.post<BaseResponse>(
@@ -28,6 +28,7 @@ export async function signInApi(data: SignInRequest) {
       ClientApiUrl.LOGIN,
       data
     );
+
     if (result.data.data) {
       LocalStorageHelper.setUser(result.data.data);
     }

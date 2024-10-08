@@ -1,10 +1,10 @@
 import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import { SignInResponse } from "@/src/data-source/auth/models/responses/sign-in-response";
+import { DataEncryption } from "./data-encryption";
 
 export class LocalStorageHelper {
   static getItem(key: string) {
     return localStorage.getItem(key);
-    return null;
   }
 
   static setItem(key: string, value: string) {
@@ -20,15 +20,29 @@ export class LocalStorageHelper {
   }
 
   static getUser() {
-    const userData = localStorage.getItem(LocalStorageKey.USER_DATA);
-    if (userData) {
-      return JSON.parse(userData) as SignInResponse;
+    try {
+      const userData = localStorage.getItem(LocalStorageKey.USER_DATA);
+
+      if (userData) {
+        const decryptData = DataEncryption().decrypt(userData);
+
+        return JSON.parse(decryptData) as SignInResponse;
+      }
+    } catch (error) {
+      throw error;
     }
     return null;
   }
 
-  static setUser(user: SignInResponse) {
-    localStorage.setItem(LocalStorageKey.USER_DATA, JSON.stringify(user));
+  static setUser(user: object) {
+    try {
+      localStorage.setItem(
+        LocalStorageKey.USER_DATA,
+        DataEncryption().encrypt(JSON.stringify(user))
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
   static removeUser() {
