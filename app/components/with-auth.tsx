@@ -9,35 +9,41 @@ export default function WithAuth({
 }>) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const isSignInOrSignUpPage =
+    window.location.pathname.includes("sign-in") ||
+    window.location.pathname.includes("sign-up");
+  const isAdminPage = window.location.pathname.includes("admin");
+
   useEffect(() => {
     const storedUserData = LocalStorageHelper.getUser();
-    const isAdmin = window.location.pathname.includes("admin");
 
     if (storedUserData) {
       setIsLoggedIn(true);
 
-      if (isAdmin) {
-        if (storedUserData.user.role === 1) {
-          setIsAdmin(true);
+      if (storedUserData.user.role === 1) {
+        setIsAdmin(true);
 
-          return;
-        }
-      } else {
+        return;
+      }
+
+      if (!isAdmin) {
         window.location.href = ClientRoutes.HOME;
         return;
       }
 
       window.location.href = ClientRoutes.HOME;
       return;
-    } else if (isAdmin && !storedUserData) {
-      window.location.href = ClientRoutes.SIGN_IN;
+    } else if (!storedUserData && !isSignInOrSignUpPage) {
+      window.location.href = ClientRoutes.HOME;
       return;
     }
-  }, []);
+  }, [isAdmin, isSignInOrSignUpPage]);
 
-  if (!isLoggedIn && isAdmin) {
+  if (!isLoggedIn && !isSignInOrSignUpPage) {
     return <></>;
+  } else if (isLoggedIn && !isAdmin && (isSignInOrSignUpPage || isAdminPage)) {
+    return <></>;
+  } else {
+    return <>{children}</>;
   }
-
-  return <>{children}</>;
 }
