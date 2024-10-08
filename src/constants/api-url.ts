@@ -6,6 +6,6 @@ export enum ClientApiUrl {
 
 export enum AdminApiUrl {
   DASHBOARD = "/admin/dashboard",
-  USERS = "/admin/users",
+  USERS = "/users",
   SETTINGS = "/admin/settings",
 }

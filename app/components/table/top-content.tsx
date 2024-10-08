@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Button, Input } from "@nextui-org/react";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import AppDropdown from "@/app/components/app-dropdown";
 import AppButton from "../app-button";
+import { Input } from "@nextui-org/react";
+import { TextConstant } from "@/src/constants/text-constant";
 
 const TopContent = ({ onAdd }: { onAdd?: () => void }) => {
   const columns = [
@@ -39,15 +40,17 @@ const TopContent = ({ onAdd }: { onAdd?: () => void }) => {
               console.log(selected);
             }}
           />
-          <AppButton color="primary" endIcon={<FaPlus />} onClick={onAdd}>
-            Add New
+          <AppButton variant="primary" endIcon={<FaPlus />} onClick={onAdd}>
+            {TextConstant.ADD_NEW}
           </AppButton>
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">Total 10 users</span>
+        <span className="text-default-400 text-small">
+          {TextConstant.TOTAL} 10 {TextConstant.USERS}
+        </span>
         <label className="flex items-center text-default-400 text-small">
-          Rows per page:
+          {TextConstant.ROWS_PER_PAGE}:
           <select className="bg-transparent outline-none text-default-400 text-small">
             <option value="5">5</option>
             <option value="10">10</option>

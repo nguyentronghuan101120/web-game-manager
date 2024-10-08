@@ -8,15 +8,11 @@ import {
   createUserApi,
   editUserApi,
 } from "@/src/data-source/users/apis/user-api";
-import {
-  validateConfirmPassword,
-  validateEmail,
-  validatePassword,
-  validateUsername,
-} from "@/src/utils/others/form-validate/form-validate";
+
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import AppDropdown from "@/app/components/app-dropdown";
 import { TextConstant } from "@/src/constants/text-constant";
+import FormValidator from "@/src/utils/others/form-validate";
 
 interface UserEditorFormDialogProps {
   isOpen: boolean;
@@ -140,7 +136,7 @@ export default function UserEditorFormDialog({
             label={TextConstant.USERNAME}
             type="text"
             register={register("username", {
-              validate: (value) => validateUsername(value),
+              validate: (value) => FormValidator.validateUsername(value),
             })}
             name="username"
             error={errors.username}
@@ -150,7 +146,7 @@ export default function UserEditorFormDialog({
             label={TextConstant.EMAIL}
             type="email"
             register={register("email", {
-              validate: (value) => validateEmail(value),
+              validate: (value) => FormValidator.validateEmail(value),
             })}
             name="email"
             error={errors.email}
@@ -163,7 +159,8 @@ export default function UserEditorFormDialog({
             label={TextConstant.PASSWORD}
             type="password"
             register={register("password", {
-              validate: (value) => validatePassword(value, isEdit),
+              validate: (value) =>
+                FormValidator.validatePassword(value, isEdit),
             })}
             name="password"
             error={errors.password}
@@ -174,7 +171,11 @@ export default function UserEditorFormDialog({
             type="password"
             register={register("confirmPassword", {
               validate: (value) =>
-                validateConfirmPassword(value, getValues("password"), isEdit),
+                FormValidator.validateConfirmPassword(
+                  value,
+                  getValues("password"),
+                  isEdit
+                ),
             })}
             name="confirmPassword"
             error={errors.confirmPassword}

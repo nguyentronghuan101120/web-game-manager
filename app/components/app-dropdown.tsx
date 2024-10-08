@@ -37,11 +37,11 @@ export default function AppDropdown({
   const selectedLabel = selectedOption.label || "Select an option";
 
   return (
-    <div className={`flex flex-col gap-2 w-full ${className}`}>
+    <div className={`flex flex-col gap-2 ${className}`}>
       {label && <label>{label}</label>}
       <Dropdown>
         <DropdownTrigger>
-          <Button className="rounded flex items-center justify-between z-0">
+          <Button className="rounded-md flex items-center justify-between z-0 h-12">
             {selectedLabel} <FaChevronDown />
           </Button>
         </DropdownTrigger>

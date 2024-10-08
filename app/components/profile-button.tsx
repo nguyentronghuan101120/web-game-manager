@@ -8,19 +8,19 @@ import { ClientRoutes } from "@/src/constants/routes";
 import AdminPanelButton from "./admin-pannel-button";
 import { TextConstant } from "@/src/constants/text-constant";
 import { LogoutUser } from "@/src/utils/others/others-util";
-import { SignInResponse } from "@/src/data-source/auth/models/responses/sign-in-response";
-import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
 
-export default function ProfileButton() {
+export default function ProfileButton({
+  username,
+  userRole,
+}: {
+  username: string;
+  userRole: number;
+}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null); // Add explicit type here
-  const [userData, setUserData] = useState<SignInResponse | null>(null);
 
   useEffect(() => {
-    const userData = LocalStorageHelper.getUser();
-    setUserData(userData);
-
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -58,16 +58,16 @@ export default function ProfileButton() {
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
         <FaUser className="text-gray-700 transition-colors duration-300 mr-2" />
-        hi, {userData?.user?.username ?? "Guest"}
+        hi, {username}
       </span>
       {dropdownOpen && (
         <div
           className={`absolute right-0 left-1 mt-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20 ${
-            userData?.user.role === 1 ? "w-52" : "w-48"
+            userRole === 1 ? "w-52" : "w-48"
           }`}
         >
           <ul className="py-1 rounded-lg">
-            {userData?.user.role === 1 && (
+            {userRole === 1 && (
               <li>
                 <AdminPanelButton />
               </li>

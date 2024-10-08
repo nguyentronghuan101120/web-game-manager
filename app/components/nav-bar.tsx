@@ -7,12 +7,15 @@ import AppButton from "./app-button";
 import { TextConstant } from "@/src/constants/text-constant";
 import { useEffect, useState } from "react";
 import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
+import { SignInResponse } from "@/src/data-source/auth/models/responses/sign-in-response";
 
 export default function NavBar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [storedUserData, setStoredUserData] = useState<SignInResponse | null>(
+    null
+  );
   useEffect(() => {
     const storedUserData = LocalStorageHelper.getUser();
-    setIsLoggedIn(!!storedUserData);
+    setStoredUserData(storedUserData);
   }, []);
 
   return (
@@ -20,8 +23,11 @@ export default function NavBar() {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <div className="flex md:order-2 space-x-4">
           <ThemeSwitcherButton />
-          {isLoggedIn ? (
-            <ProfileButton />
+          {storedUserData ? (
+            <ProfileButton
+              username={storedUserData?.user?.username ?? ""}
+              userRole={storedUserData?.user?.role ?? 0}
+            />
           ) : (
             <AppButton
               variant="primary"

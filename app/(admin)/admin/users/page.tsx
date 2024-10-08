@@ -14,6 +14,7 @@ import { UserResponse } from "@/src/data-source/users/models/responses/user-resp
 import { toast } from "react-toastify";
 import ErrorLabel from "@/app/components/error-label";
 import UserEditorFormDialog from "./user-editor-form-dialog";
+import { TextConstant } from "@/src/constants/text-constant";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserResponse[]>([]);
@@ -125,6 +126,8 @@ export default function UsersPage() {
             isOpen={isDeleteDialogOpen}
             onConfirm={() => handleDelete(selectedUser?.id as number)}
             onCancel={handleClose}
+            title={TextConstant.DELETE_USER}
+            subtitle={TextConstant.DELETE_USER_SUBTITLE}
           />
         </>
       )}

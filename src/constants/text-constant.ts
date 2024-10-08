@@ -31,4 +31,10 @@ export enum TextConstant {
   ARE_YOU_SURE = "Are you sure?",
   DO_YOU_WANT_TO_LOGOUT = "Do you want to logout?",
   DOWNLOAD = "Download",
+  DELETE_USER = "Delete User",
+  DELETE_USER_SUBTITLE = "Are you sure you want to delete this user?",
+  ADD_NEW = "Add New",
+  TOTAL = "Total",
+  USERS = "Users",
+  ROWS_PER_PAGE = "Rows per page",    
 }

@@ -16,10 +16,8 @@ import { TextConstant } from "@/src/constants/text-constant";
 import WithAuth from "@/app/components/with-auth";
 import { useState } from "react";
 import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
-import {
-  validatePassword,
-  validateUsername,
-} from "@/src/utils/others/form-validate";
+import FormValidator from "@/src/utils/others/form-validate";
+
 // import ReCAPTCHA from "react-google-recaptcha"; // Import ReCAPTCHA component
 
 interface SignInFormData {
@@ -79,7 +77,7 @@ export default function SignIn() {
             label={TextConstant.USERNAME_EMAIL}
             type="text"
             register={register("username", {
-              validate: (value) => validateUsername(value),
+              validate: (value) => FormValidator.validateUsername(value),
             })}
             name="username"
             error={errors.username}
@@ -90,7 +88,7 @@ export default function SignIn() {
             label={TextConstant.PASSWORD}
             type="password"
             register={register("password", {
-              validate: (value) => validatePassword(value, false),
+              validate: (value) => FormValidator.validatePassword(value, false),
             })}
             name="password"
             error={errors.password}

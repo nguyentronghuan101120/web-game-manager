@@ -5,7 +5,6 @@ import Card from "../../components/card";
 import InputField from "../../components/input-field";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react"; // Import useState for loading state
 import Loading from "@/app/components/loading"; // Import loading component
 import { signUpApi } from "@/src/data-source/auth/apis/auth-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
@@ -13,13 +12,10 @@ import { useRouter } from "next/navigation";
 import AppButton from "@/app/components/app-button";
 import { ClientRoutes } from "@/src/constants/routes";
 import { TextConstant } from "@/src/constants/text-constant";
-import {
-  validateConfirmPassword,
-  validateEmail,
-  validatePassword,
-} from "@/src/utils/others/form-validate/form-validate";
-import { validateUsername } from "@/src/utils/others/form-validate/form-validate";
-import { CheckUserLoggedIn } from "@/src/utils/others/others-util";
+
+import WithAuth from "@/app/components/with-auth";
+import { useState } from "react";
+import FormValidator from "@/src/utils/others/form-validate";
 interface SignUpFormData {
   email: string;
   username: string;
@@ -53,71 +49,74 @@ export default function SignUp() {
     }
   }
 
-  useEffect(() => {
-    CheckUserLoggedIn();
-  }, []);
   return (
-    <Card>
-      {loading && <Loading />} {/* Show loading component when loading */}
-      <form onSubmit={handleSubmit(handleSignUp)}>
-        <InputField
-          label={TextConstant.USERNAME}
-          type="text"
-          register={register("username", {
-            validate: (value) => validateUsername(value),
-          })}
-          name="username"
-          error={errors.username}
-          placeholder={TextConstant.USERNAME_PLACEHOLDER}
-        />
-        <InputField
-          label={TextConstant.EMAIL}
-          type="email"
-          register={register("email", {
-            validate: (value) => validateEmail(value),
-          })}
-          name="email"
-          error={errors.email}
-          placeholder={TextConstant.EMAIL_PLACEHOLDER}
-        />
+    <WithAuth>
+      <Card>
+        {loading && <Loading />} {/* Show loading component when loading */}
+        <form onSubmit={handleSubmit(handleSignUp)}>
+          <InputField
+            label={TextConstant.USERNAME}
+            type="text"
+            register={register("username", {
+              validate: (value) => FormValidator.validateUsername(value),
+            })}
+            name="username"
+            error={errors.username}
+            placeholder={TextConstant.USERNAME_PLACEHOLDER}
+          />
+          <InputField
+            label={TextConstant.EMAIL}
+            type="email"
+            register={register("email", {
+              validate: (value) => FormValidator.validateEmail(value),
+            })}
+            name="email"
+            error={errors.email}
+            placeholder={TextConstant.EMAIL_PLACEHOLDER}
+          />
 
-        <InputField
-          label={TextConstant.PASSWORD}
-          type="password"
-          register={register("password", {
-            validate: (value) => validatePassword(value, false),
-          })}
-          name="password"
-          error={errors.password}
-          placeholder={TextConstant.PASSWORD_PLACEHOLDER}
-        />
-        <InputField
-          label={TextConstant.CONFIRM_PASSWORD}
-          type="password"
-          register={register("confirmPassword", {
-            validate: (value) =>
-              validateConfirmPassword(value, getValues("password"), false),
-          })}
-          name="confirmPassword"
-          error={errors.confirmPassword}
-          placeholder={TextConstant.CONFIRM_PASSWORD_PLACEHOLDER}
-        />
+          <InputField
+            label={TextConstant.PASSWORD}
+            type="password"
+            register={register("password", {
+              validate: (value) => FormValidator.validatePassword(value, false),
+            })}
+            name="password"
+            error={errors.password}
+            placeholder={TextConstant.PASSWORD_PLACEHOLDER}
+          />
+          <InputField
+            label={TextConstant.CONFIRM_PASSWORD}
+            type="password"
+            register={register("confirmPassword", {
+              validate: (value) =>
+                FormValidator.validateConfirmPassword(
+                  value,
+                  getValues("password"),
+                  false
+                ),
+            })}
+            name="confirmPassword"
+            error={errors.confirmPassword}
+            placeholder={TextConstant.CONFIRM_PASSWORD_PLACEHOLDER}
+          />
 
-        <div className="flex justify-center">
-          <AppButton type="submit" disabled={loading}>
-            {" "}
-            {/* Disable button when loading */}
-            {loading ? "Loading..." : "Sign Up"} {/* Show loading text */}
-          </AppButton>
-        </div>
+          <div className="flex justify-center">
+            <AppButton type="submit" disabled={loading}>
+              {" "}
+              {/* Disable button when loading */}
+              {loading ? "Loading..." : "Sign Up"} {/* Show loading text */}
+            </AppButton>
+          </div>
 
-        <p className="mt-4 text-sm text-gray-600 flex justify-center">
-          {TextConstant.DO_NOT_HAVE_AN_ACCOUNT}
-          <Link href={ClientRoutes.SIGN_IN} className="text-blue-500 ml-1">
-            {TextConstant.SIGN_IN}
-          </Link>
-        </p>
-      </form>
-    </Card>
+          <p className="mt-4 text-sm text-gray-600 flex justify-center">
+            {TextConstant.DO_NOT_HAVE_AN_ACCOUNT}
+            <Link href={ClientRoutes.SIGN_IN} className="text-blue-500 ml-1">
+              {TextConstant.SIGN_IN}
+            </Link>
+          </p>
+        </form>
+      </Card>
+    </WithAuth>
   );
 }
