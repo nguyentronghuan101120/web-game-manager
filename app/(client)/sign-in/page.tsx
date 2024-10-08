@@ -39,14 +39,11 @@ export default function SignIn() {
   });
 
   useEffect(() => {
-    const storedUsername =
-      LocalStorageHelper.getItem(LocalStorageKey.REMEMBER_ME_USERNAME) || "";
-    const storedPassword =
-      LocalStorageHelper.getItem(LocalStorageKey.REMEMBER_ME_PASSWORD) || "";
+    const rememberMe = LocalStorageHelper.getRememberMe();
 
-    if (storedUsername && storedPassword) {
-      setValue("username", storedUsername);
-      setValue("password", storedPassword);
+    if (rememberMe) {
+      setValue("username", rememberMe.username);
+      setValue("password", rememberMe.password);
     }
   }, [setValue]);
 
@@ -58,18 +55,14 @@ export default function SignIn() {
       const response = await signInApi(data);
 
       if (rememberMe) {
-        LocalStorageHelper.setItem(
-          LocalStorageKey.REMEMBER_ME_USERNAME,
-          data.username
-        );
-        LocalStorageHelper.setItem(
-          LocalStorageKey.REMEMBER_ME_PASSWORD,
-          data.password
-        );
+        LocalStorageHelper.setRememberMe({
+          username: data.username,
+          password: data.password,
+        });
       } else {
-        LocalStorageHelper.removeItem(LocalStorageKey.REMEMBER_ME_USERNAME);
-        LocalStorageHelper.removeItem(LocalStorageKey.REMEMBER_ME_PASSWORD);
+        LocalStorageHelper.removeItem(LocalStorageKey.REMEMBER_ME);
       }
+
       toast.success(response.data.message);
       window.location.href = ClientRoutes.HOME;
     } catch (error) {
