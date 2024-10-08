@@ -14,7 +14,7 @@ import { ClientRoutes } from "@/src/constants/routes";
 import { TextConstant } from "@/src/constants/text-constant";
 
 import WithAuth from "@/app/components/with-auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
 import FormValidator from "@/src/utils/others/form-validate";
 
@@ -30,14 +30,25 @@ export default function SignIn() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<SignInFormData>({
     defaultValues: {
-      username:
-        LocalStorageHelper.getItem(LocalStorageKey.REMEMBER_ME_USERNAME) || "",
-      password:
-        LocalStorageHelper.getItem(LocalStorageKey.REMEMBER_ME_PASSWORD) || "",
+      username: "",
+      password: "",
     },
   });
+
+  useEffect(() => {
+    const storedUsername =
+      LocalStorageHelper.getItem(LocalStorageKey.REMEMBER_ME_USERNAME) || "";
+    const storedPassword =
+      LocalStorageHelper.getItem(LocalStorageKey.REMEMBER_ME_PASSWORD) || "";
+
+    if (storedUsername && storedPassword) {
+      setValue("username", storedUsername);
+      setValue("password", storedPassword);
+    }
+  }, [setValue]);
 
   const [rememberMe, setRememberMe] = useState(true); // State for remember me checkbox
   const [loading, setLoading] = useState(false); // State to manage loading

@@ -1,49 +1,43 @@
 import { ClientRoutes } from "@/src/constants/routes";
 import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import NotFound from "../not-found";
 
-export default function WithAuth({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+export default function WithAuth({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   const isSignInOrSignUpPage =
-    window.location.pathname.includes("sign-in") ||
-    window.location.pathname.includes("sign-up");
-  const isAdminPage = window.location.pathname.includes("admin");
+    pathname.includes("sign-in") || pathname.includes("sign-up");
+  const isAdminPage = pathname.includes("admin");
+
+  const [pageLoaded, setPageLoaded] = useState<React.ReactNode>(<></>);
 
   useEffect(() => {
     const storedUserData = LocalStorageHelper.getUser();
+    const isAdmin = storedUserData?.user.role === 1;
 
-    if (storedUserData) {
-      setIsLoggedIn(true);
-
-      if (storedUserData.user.role === 1) {
-        setIsAdmin(true);
-
-        return;
-      }
-
+    if (isAdminPage) {
       if (!isAdmin) {
-        window.location.href = ClientRoutes.HOME;
-        return;
+        setPageNotFound();
+      } else {
+        setPageLoaded(children);
       }
-
-      window.location.href = ClientRoutes.HOME;
-      return;
-    } else if (!storedUserData && !isSignInOrSignUpPage) {
-      window.location.href = ClientRoutes.HOME;
-      return;
+    } else if (isSignInOrSignUpPage && storedUserData) {
+      redirectToHome();
+    } else {
+      setPageLoaded(children);
     }
-  }, [isAdmin, isSignInOrSignUpPage]);
+  }, [isAdminPage, isSignInOrSignUpPage, children]);
 
-  if (!isLoggedIn && !isSignInOrSignUpPage) {
-    return <></>;
-  } else if (isLoggedIn && !isAdmin && (isSignInOrSignUpPage || isAdminPage)) {
-    return <></>;
-  } else {
-    return <>{children}</>;
-  }
+  const redirectToHome = () => {
+    window.location.href = ClientRoutes.HOME;
+    return;
+  };
+
+  const setPageNotFound = () => {
+    setPageLoaded(<NotFound />);
+    return;
+  };
+  return <>{pageLoaded}</>;
 }

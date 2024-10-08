@@ -36,5 +36,7 @@ export enum TextConstant {
   ADD_NEW = "Add New",
   TOTAL = "Total",
   USERS = "Users",
-  ROWS_PER_PAGE = "Rows per page",    
+  ROWS_PER_PAGE = "Rows per page",
+  NOT_FOUND_PAGE = "Oops! The page you're looking for doesn't exist.",
+  GO_HOME = "Go Home",
 }
