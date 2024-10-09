@@ -21,6 +21,8 @@ interface AppTableProps {
   onAdd?: () => void;
   onDelete?: (index: number) => void;
   onEdit?: (index: number) => void;
+  onSearch?: (value: string) => void;
+  onPageSizeChange?: (value: string) => void;
 }
 
 const activatedColorMap: Record<string, ChipProps["color"]> = {
@@ -34,6 +36,8 @@ export default function AppTable({
   onAdd,
   onDelete,
   onEdit,
+  onSearch,
+  onPageSizeChange,
 }: AppTableProps) {
   const renderCell = (item: any, columnKey: Key) => {
     const key = (columnKey as string).toLowerCase();
@@ -51,7 +55,7 @@ export default function AppTable({
       case "activated":
         return (
           <Chip
-            className="capitalize border-none gap-1 text-default-600"
+            className="capitalize border-none gap-1  text-small"
             color={activatedColorMap[cellValue]}
             size="sm"
             variant="dot"
@@ -60,7 +64,7 @@ export default function AppTable({
           </Chip>
         );
       default:
-        return <p className="text-bold text-small">{cellValue}</p>;
+        return <p className=" text-small">{cellValue}</p>;
     }
   };
 
@@ -79,7 +83,14 @@ export default function AppTable({
         wrapper: "max-h-[650px]",
       }}
       selectionMode="multiple"
-      topContent={<TopContent onAdd={onAdd} />}
+      topContent={
+        <TopContent
+          onAdd={onAdd}
+          onSearch={onSearch}
+          onPageSizeChange={onPageSizeChange}
+          total={items.length}
+        />
+      }
       topContentPlacement="outside"
     >
       <TableHeader columns={updatedHeaderColumns}>
@@ -88,6 +99,7 @@ export default function AppTable({
             key={column.name}
             align={column.name === "Actions" ? "center" : "start"}
             allowsSorting={column.sortable}
+            className={"font-bold text-sm"}
           >
             {column.name}
           </TableColumn>

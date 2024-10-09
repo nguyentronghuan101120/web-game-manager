@@ -7,7 +7,7 @@ import { LogoutUser } from "@/src/utils/others/others-util";
 export default function AdminSideBar({ isOpen }: { isOpen: boolean }) {
   return (
     <div
-      className={`bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
+      className={`bg-gradient-to-tr from-blue-800 to-blue-400 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:relative md:translate-x-0 transition duration-300 ease-in-out shadow-xl`}
     >
@@ -60,7 +60,7 @@ function AnimatedLink({
   return (
     <Link
       href={href}
-      className="flex items-center px-4 py-2 mt-5 text-gray-200 hover:bg-gray-600 rounded-md group transition duration-150"
+      className="flex items-center px-4 py-2 mt-5 text-gray-200 hover:bg-blue-500 rounded-md group transition duration-150"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}

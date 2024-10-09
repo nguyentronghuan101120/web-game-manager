@@ -7,6 +7,7 @@ import { TableColumnModel } from "@/app/components/table/table-colum-model";
 import {
   deleteUserApi,
   getUsersApi,
+  searchUserApi,
 } from "@/src/data-source/users/apis/user-api";
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import { useEffect, useState } from "react";
@@ -84,6 +85,15 @@ export default function UsersPage() {
     setSelectedUser(users.find((user) => user.id === userId));
   };
 
+  const handleSearch = async (username: string) => {
+    try {
+      const result = await searchUserApi(username);
+      setUsers(result.data.data ?? []);
+    } catch (error) {
+      toast.error((error as BaseResponse).message);
+    }
+  };
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 text-center">User Management</h1>
@@ -97,6 +107,8 @@ export default function UsersPage() {
             onAdd={handleAdd}
             onDelete={(id) => confirmDelete(id)}
             onEdit={(id) => handleEdit(id)}
+            onSearch={(value) => handleSearch(value)}
+            onPageSizeChange={(value) => console.log(value)}
           />
 
           <AppDialog

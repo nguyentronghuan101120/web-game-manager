@@ -23,10 +23,10 @@ interceptor.interceptors.request.use(
       }
     }
 
-    const data = DataEncryption().encrypt(JSON.stringify(config.data));
-
-    config.data = { data: data };
-
+    if (config.data) {
+      // const data = DataEncryption().encrypt(JSON.stringify(config.data));
+      // config.data = { data: data };
+    }
     return config;
   },
   function (error) {

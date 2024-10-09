@@ -17,7 +17,7 @@ export default function AdminLayout({
       <div className="flex h-screen bg-gray-100">
         <AdminSideBar isOpen={isOpen} />
         <div className="flex-1 flex flex-col">
-          <div className="bg-gray-800 text-white p-4 flex justify-between md:hidden">
+          <div className="bg-primary text-white p-4 flex justify-between md:hidden">
             <button onClick={() => setIsOpen(!isOpen)} className="text-2xl">
               <FaBars />
             </button>

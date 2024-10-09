@@ -54,3 +54,14 @@ export async function deleteUserApi(userId: number) {
     throw errorResponse(error as AxiosError);
   }
 }
+
+export async function searchUserApi(username: string) {
+  try {
+    const result = await interceptor.get<BaseResponse<UserResponse[]>>(
+      AdminApiUrl.USERS + `/search?username=${username}`
+    );
+    return result;
+  } catch (error) {
+    throw errorResponse(error as AxiosError);
+  }
+}
