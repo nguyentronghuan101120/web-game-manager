@@ -9,20 +9,23 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import BottomContent from "./bottom-content";
-import TopContent from "./top-content";
 import { TableColumnModel } from "./table-colum-model";
 import { Key } from "react";
 import ActionButton from "./action-button";
+import TableHeaderCustom, {
+  TableHeaderCustomProps,
+} from "./table.header.custom";
+import TableFooterCustom, {
+  TableFooterCustomProps,
+} from "./table.footer.custom";
 
 interface AppTableProps {
   headerColumns: TableColumnModel[];
   items: any[];
-  onAdd?: () => void;
   onDelete?: (index: number) => void;
   onEdit?: (index: number) => void;
-  onSearch?: (value: string) => void;
-  onPageSizeChange?: (value: string) => void;
+  tableHeaderProps?: TableHeaderCustomProps;
+  tableFooterProps?: TableFooterCustomProps;
 }
 
 const activatedColorMap: Record<string, ChipProps["color"]> = {
@@ -33,11 +36,10 @@ const activatedColorMap: Record<string, ChipProps["color"]> = {
 export default function AppTable({
   headerColumns,
   items,
-  onAdd,
   onDelete,
   onEdit,
-  onSearch,
-  onPageSizeChange,
+  tableHeaderProps,
+  tableFooterProps,
 }: AppTableProps) {
   const renderCell = (item: any, columnKey: Key) => {
     const key = (columnKey as string).toLowerCase();
@@ -77,18 +79,28 @@ export default function AppTable({
   return (
     <Table
       isHeaderSticky
-      bottomContent={<BottomContent />}
+      bottomContent={
+        <TableFooterCustom
+          total={tableFooterProps?.total ?? 0}
+          onPageChange={tableFooterProps?.onPageChange ?? (() => {})}
+          onPrevious={tableFooterProps?.onPrevious ?? (() => {})}
+          onNext={tableFooterProps?.onNext ?? (() => {})}
+          itemsPerPage={tableFooterProps?.itemsPerPage ?? 0}
+          page={tableFooterProps?.page ?? 0}
+        />
+      }
       bottomContentPlacement="outside"
       classNames={{
         wrapper: "max-h-[650px]",
       }}
       selectionMode="multiple"
       topContent={
-        <TopContent
-          onAdd={onAdd}
-          onSearch={onSearch}
-          onPageSizeChange={onPageSizeChange}
-          total={items.length}
+        <TableHeaderCustom
+          onSearch={tableHeaderProps?.onSearch ?? (() => {})}
+          onPageSizeChange={tableHeaderProps?.onPageSizeChange ?? (() => {})}
+          onFilter={tableHeaderProps?.onFilter ?? (() => {})}
+          onAdd={tableHeaderProps?.onAdd ?? (() => {})}
+          total={tableHeaderProps?.total ?? 0}
         />
       }
       topContentPlacement="outside"

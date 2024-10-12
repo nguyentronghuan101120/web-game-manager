@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import ErrorLabel from "@/app/components/error-label";
 import UserEditorFormDialog from "./user-editor-form-dialog";
 import { TextConstant } from "@/src/constants/text-constant";
+import { PaginationAndTotalModel } from "@/src/utils/network/models/common/paginationAndTotal.model";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserResponse[]>([]);
@@ -26,12 +27,21 @@ export default function UsersPage() {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserResponse>();
 
+  const [pagination, setPagination] = useState<PaginationAndTotalModel>({
+    page: 1,
+    limit: 5,
+    total: 0,
+  });
+
+  const [total, setTotal] = useState(0);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setIsLoading(true);
-        const result = await getUsersApi();
+        const result = await getUsersApi(pagination);
         setUsers(result.data.data ?? []);
+        setTotal(result.data.pagination?.total ?? 0);
       } catch (error) {
         setError(error as BaseResponse);
       } finally {
@@ -39,7 +49,7 @@ export default function UsersPage() {
       }
     };
     fetchUsers();
-  }, []);
+  }, [pagination]);
 
   // Columns definition
   const headerColumns: TableColumnModel[] = [
@@ -94,6 +104,7 @@ export default function UsersPage() {
     }
   };
 
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 text-center">User Management</h1>
@@ -104,11 +115,44 @@ export default function UsersPage() {
           <AppTable
             headerColumns={headerColumns}
             items={users}
-            onAdd={handleAdd}
             onDelete={(id) => confirmDelete(id)}
             onEdit={(id) => handleEdit(id)}
-            onSearch={(value) => handleSearch(value)}
-            onPageSizeChange={(value) => console.log(value)}
+            tableHeaderProps={{
+              total: total,
+              onSearch: (value: string) => handleSearch(value),
+              onAdd: handleAdd,
+              onFilter: (value: string) => value,
+              onPageSizeChange: (value: string) => {
+                setPagination((prev: PaginationAndTotalModel) => ({
+                  ...prev,
+                  limit: parseInt(value),
+                  page: 1,
+                }));
+              },
+            }}
+            tableFooterProps={{
+              total: total,
+              onPageChange: (value: number) => {
+                setPagination((prev: PaginationAndTotalModel) => ({
+                  ...prev,
+                  page: value,
+                }));
+              },
+              onPrevious: () => {
+                setPagination((prev: PaginationAndTotalModel) => ({
+                  ...prev,
+                  page: prev.page - 1,
+                }));
+              },
+              onNext: () => {
+                setPagination((prev: PaginationAndTotalModel) => ({
+                  ...prev,
+                  page: prev.page + 1,
+                }));
+              },
+              itemsPerPage: pagination.limit,
+              page: pagination.page,
+            }}
           />
 
           <AppDialog

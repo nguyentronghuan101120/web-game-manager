@@ -3,25 +3,25 @@ import React from "react";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import AppDropdown from "@/app/components/app-dropdown";
 import AppButton from "../app-button";
-import { Input } from "@nextui-org/react";
 import { TextConstant } from "@/src/constants/text-constant";
 import { usePathname } from "next/navigation";
+import AppInput from "../input-field";
 
-interface TopContentProps {
-  onAdd?: () => void;
-  onSearch?: (value: string) => void;
+export type TableHeaderCustomProps = {
+  onAdd: () => void;
+  onSearch: (value: string) => void;
   onFilter?: (value: string) => void;
   onPageSizeChange?: (value: string) => void;
   total?: number;
-}
+};
 
-const TopContent = ({
-  onAdd,
+const TableHeaderCustom = ({
   onSearch,
   onFilter,
   onPageSizeChange,
   total,
-}: TopContentProps) => {
+  onAdd,
+}: TableHeaderCustomProps) => {
   const pathName = usePathname();
 
   const columns = [
@@ -33,19 +33,26 @@ const TopContent = ({
     { label: "Active", value: "1" },
     { label: "Inactive", value: "0" },
   ];
+
+  const pageSizeOptions = [
+    { label: "5", value: "5" },
+    { label: "10", value: "10" },
+    { label: "15", value: "15" },
+    { label: "20", value: "20" },
+  ];
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between gap-3 items-end">
-        <Input
-          isClearable
-          className="w-full sm:max-w-[44%]"
+      <div className="flex justify-between gap-3 items-start">
+        <AppInput
           placeholder="Search by name..."
-          startContent={<FaSearch />}
+          leadingIcon={<FaSearch />}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter") {
               onSearch?.((e.target as HTMLInputElement).value);
             }
           }}
+          className="max-w-[300px]"
         />
         <div className="flex gap-3">
           <AppDropdown
@@ -71,23 +78,21 @@ const TopContent = ({
         <span className="text-default-400 text-small">
           {TextConstant.TOTAL} {total} {pathName.split("/").pop()}
         </span>
-        <label className="flex items-center text-default-400 text-small">
+
+        <label className="flex items-center text-default-400 text-small gap-2">
           {TextConstant.ROWS_PER_PAGE}:
-          <select
-            className="bg-transparent outline-none text-default-400 text-small"
-            onChange={(e) => {
-              onPageSizeChange?.(e.target.value);
+          <AppDropdown
+            options={pageSizeOptions}
+            selected={pageSizeOptions[0]}
+            setSelected={(selected) => {
+              onPageSizeChange?.(selected.value as string);
             }}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
+            className="!max-h-[30px] "
+          />
         </label>
       </div>
     </div>
   );
 };
 
-export default TopContent;
+export default TableHeaderCustom;

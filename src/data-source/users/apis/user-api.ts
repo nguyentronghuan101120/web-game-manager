@@ -7,11 +7,12 @@ import { AxiosError } from "axios";
 import { UserResponse } from "../models/responses/user-response";
 import { UserEditorRequest } from "../models/requests/user-editor-request";
 import { AdminApiUrl } from "@/src/constants/api-url";
+import { PaginationAndTotalModel } from "@/src/utils/network/models/common/paginationAndTotal.model";
 
-export async function getUsersApi() {
+export async function getUsersApi(pagination: PaginationAndTotalModel) {
   try {
     const result = await interceptor.get<BaseResponse<UserResponse[]>>(
-      AdminApiUrl.USERS
+      AdminApiUrl.USERS + `?page=${pagination.page}&limit=${pagination.limit}`
     );
     return result;
   } catch (error) {

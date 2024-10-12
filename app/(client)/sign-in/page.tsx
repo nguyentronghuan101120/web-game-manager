@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import Card from "../../components/card";
-import InputField from "../../components/input-field";
+import AppInput from "../../components/input-field";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { signInApi } from "@/src/data-source/auth/apis/auth-api";
@@ -77,7 +77,7 @@ export default function SignIn() {
       <Card>
         {loading && <Loading />} {/* Show loading component when loading */}
         <form onSubmit={handleSubmit(handleSignIn)}>
-          <InputField
+          <AppInput
             label={TextConstant.USERNAME_EMAIL}
             type="text"
             register={register("username", {
@@ -88,7 +88,7 @@ export default function SignIn() {
             placeholder={TextConstant.USERNAME_EMAIL_PLACEHOLDER}
           />
 
-          <InputField
+          <AppInput
             label={TextConstant.PASSWORD}
             type="password"
             register={register("password", {

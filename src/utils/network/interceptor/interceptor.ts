@@ -24,8 +24,8 @@ interceptor.interceptors.request.use(
     }
 
     if (config.data) {
-      // const data = DataEncryption().encrypt(JSON.stringify(config.data));
-      // config.data = { data: data };
+      const data = DataEncryption().encrypt(JSON.stringify(config.data));
+      config.data = { data: data };
     }
     return config;
   },
