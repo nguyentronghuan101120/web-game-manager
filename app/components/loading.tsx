@@ -1,8 +1,18 @@
 import React from "react";
 
-const Loading = () => {
+const Loading = ({
+  showText = false,
+  className,
+}: {
+  showText?: boolean;
+  className?: string;
+}) => {
   return (
-    <div className="absolute inset-0 bg-slate-400 bg-opacity-50 backdrop-blur flex items-center justify-center z-10">
+    <div
+      className={`${
+        showText ?? "absolute"
+      } inset-0 bg-slate-400 bg-opacity-50 backdrop-blur flex items-center justify-center z-10 ${className}`}
+    >
       <div
         aria-label="Loading..."
         role="status"

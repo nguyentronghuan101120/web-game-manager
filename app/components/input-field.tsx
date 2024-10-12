@@ -37,7 +37,7 @@ const AppInput = forwardRef<HTMLInputElement, InputFieldProps>(
     const hasIcon = type === "password"; // Determine if the input has an icon
 
     return (
-      <div className={`${className ?? "w-full"} max-h-[48px]`}>
+      <div className={`w-full ${className}`}>
         {label && (
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
             {label}
@@ -52,8 +52,13 @@ const AppInput = forwardRef<HTMLInputElement, InputFieldProps>(
           <Input
             isClearable
             ref={ref}
+            onClear={() => {
+              inputProps.onChange?.({
+                target: { value: "" },
+              } as unknown as React.ChangeEvent<HTMLInputElement>);
+            }}
             type={hasIcon && !showPassword ? "password" : "text"} // Toggle input type
-            className={`bg-gray-50  mb-2 ${
+            className={`bg-gray-50 border mb-2 ${
               error ? "border-red-500" : ""
             } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${
               hasIcon ? "pr-10" : leadingIcon ? "pl-10" : ""

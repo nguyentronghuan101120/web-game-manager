@@ -26,6 +26,7 @@ export default function UsersPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserResponse>();
+  const [isSearchActive, setIsSearchActive] = useState(false); // New state for search activity
 
   const [pagination, setPagination] = useState<PaginationAndTotalModel>({
     page: 1,
@@ -36,20 +37,23 @@ export default function UsersPage() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setIsLoading(true);
-        const result = await getUsersApi(pagination);
-        setUsers(result.data.data ?? []);
-        setTotal(result.data.pagination?.total ?? 0);
-      } catch (error) {
-        setError(error as BaseResponse);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUsers();
-  }, [pagination]);
+    if (!isSearchActive) {
+      // Only fetch users if search is not active
+      const fetchUsers = async () => {
+        try {
+          setIsLoading(true);
+          const result = await getUsersApi(pagination);
+          setUsers(result.data.data ?? []);
+          setTotal(result.data.pagination?.total ?? 0);
+        } catch (error) {
+          setError(error as BaseResponse);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchUsers();
+    }
+  }, [pagination, isSearchActive]); // Add isSearchActive to dependencies
 
   // Columns definition
   const headerColumns: TableColumnModel[] = [
@@ -60,7 +64,6 @@ export default function UsersPage() {
 
   const handleAdd = () => {
     setIsEdit(false);
-
     setIsUserEditorDialogOpen(true);
   };
 
@@ -85,7 +88,6 @@ export default function UsersPage() {
 
   const handleEdit = (userId: number) => {
     setIsEdit(true);
-
     setIsUserEditorDialogOpen(true);
     setSelectedUser(users.find((user) => user.id === userId));
   };
@@ -95,65 +97,86 @@ export default function UsersPage() {
     setSelectedUser(users.find((user) => user.id === userId));
   };
 
-  const handleSearch = async (username: string) => {
+  const handleSearch = async (q: string) => {
+    setIsLoading(true);
+    setIsSearchActive(true); // Mark search as active
+
+    if (!q || q === "") {
+      setIsSearchActive(false);
+      setIsLoading(false);
+      return;
+    }
     try {
-      const result = await searchUserApi(username);
+      const result = await searchUserApi(q, { ...pagination, page: 1 });
       setUsers(result.data.data ?? []);
+      setTotal(result.data.pagination?.total ?? 0);
+      setPagination((prev: PaginationAndTotalModel) => ({
+        ...prev,
+        page: 1,
+      }));
     } catch (error) {
       toast.error((error as BaseResponse).message);
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-6 text-center">User Management</h1>
-      {isLoading && <Loading />}
       {error && <ErrorLabel error={error} />}
       {!error && (
         <>
-          <AppTable
-            headerColumns={headerColumns}
-            items={users}
-            onDelete={(id) => confirmDelete(id)}
-            onEdit={(id) => handleEdit(id)}
-            tableHeaderProps={{
-              total: total,
-              onSearch: (value: string) => handleSearch(value),
-              onAdd: handleAdd,
-              onFilter: (value: string) => value,
-              onPageSizeChange: (value: string) => {
-                setPagination((prev: PaginationAndTotalModel) => ({
-                  ...prev,
-                  limit: parseInt(value),
-                  page: 1,
-                }));
-              },
-            }}
-            tableFooterProps={{
-              total: total,
-              onPageChange: (value: number) => {
-                setPagination((prev: PaginationAndTotalModel) => ({
-                  ...prev,
-                  page: value,
-                }));
-              },
-              onPrevious: () => {
-                setPagination((prev: PaginationAndTotalModel) => ({
-                  ...prev,
-                  page: prev.page - 1,
-                }));
-              },
-              onNext: () => {
-                setPagination((prev: PaginationAndTotalModel) => ({
-                  ...prev,
-                  page: prev.page + 1,
-                }));
-              },
-              itemsPerPage: pagination.limit,
-              page: pagination.page,
-            }}
-          />
+          <div className="relative">
+            <AppTable
+              headerColumns={headerColumns}
+              items={users}
+              onDelete={(id) => confirmDelete(id)}
+              onEdit={(id) => handleEdit(id)}
+              tableHeaderProps={{
+                total: total,
+                onSearch: (value: string) => handleSearch(value),
+                onAdd: handleAdd,
+                onFilter: (value: string) => value,
+                onPageSizeChange: (value: string) => {
+                  setPagination((prev: PaginationAndTotalModel) => ({
+                    ...prev,
+                    limit: parseInt(value),
+                    page: 1,
+                  }));
+                },
+              }}
+              tableFooterProps={{
+                total: total,
+                onPageChange: (value: number) => {
+                  setPagination((prev: PaginationAndTotalModel) => ({
+                    ...prev,
+                    page: value,
+                  }));
+                },
+                onPrevious: () => {
+                  setPagination((prev: PaginationAndTotalModel) => ({
+                    ...prev,
+                    page: prev.page - 1,
+                  }));
+                },
+                onNext: () => {
+                  setPagination((prev: PaginationAndTotalModel) => ({
+                    ...prev,
+                    page: prev.page + 1,
+                  }));
+                },
+                itemsPerPage: pagination.limit,
+                page: pagination.page,
+              }}
+            />
+            {isLoading && (
+              <Loading
+                showText={true}
+                className="absolute rounded-large top-32"
+              />
+            )}
+          </div>
 
           <AppDialog
             type="form"

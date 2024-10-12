@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import AppInput from "../../../components/input-field";
+import InputField from "../../../components/input-field";
 import AppButton from "@/app/components/app-button";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -132,7 +132,7 @@ export default function UserEditorFormDialog({
       </h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-4">
-          <AppInput
+          <InputField
             label={TextConstant.USERNAME}
             type="text"
             register={register("username", {
@@ -141,8 +141,9 @@ export default function UserEditorFormDialog({
             name="username"
             error={errors.username}
             placeholder={TextConstant.USERNAME_PLACEHOLDER}
+            className="mb-4"
           />
-          <AppInput
+          <InputField
             label={TextConstant.EMAIL}
             type="email"
             register={register("email", {
@@ -155,7 +156,7 @@ export default function UserEditorFormDialog({
         </div>
 
         <div className="flex gap-4">
-          <AppInput
+          <InputField
             label={TextConstant.PASSWORD}
             type="password"
             register={register("password", {
@@ -165,8 +166,9 @@ export default function UserEditorFormDialog({
             name="password"
             error={errors.password}
             placeholder={TextConstant.PASSWORD_PLACEHOLDER}
+            className="mb-4"
           />
-          <AppInput
+          <InputField
             label={TextConstant.CONFIRM_PASSWORD}
             type="password"
             register={register("confirmPassword", {

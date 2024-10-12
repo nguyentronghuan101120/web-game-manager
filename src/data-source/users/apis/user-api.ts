@@ -56,10 +56,14 @@ export async function deleteUserApi(userId: number) {
   }
 }
 
-export async function searchUserApi(username: string) {
+export async function searchUserApi(
+  q: string,
+  pagination: PaginationAndTotalModel
+) {
   try {
     const result = await interceptor.get<BaseResponse<UserResponse[]>>(
-      AdminApiUrl.USERS + `/search?username=${username}`
+      AdminApiUrl.USERS +
+        `/search?q=${q}&page=${pagination.page}&limit=${pagination.limit}`
     );
     return result;
   } catch (error) {

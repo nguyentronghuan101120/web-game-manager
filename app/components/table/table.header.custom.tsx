@@ -53,6 +53,12 @@ const TableHeaderCustom = ({
             }
           }}
           className="max-w-[300px]"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e.target.value === "") {
+              onSearch?.(e.target.value);
+            }
+          }}
+
         />
         <div className="flex gap-3">
           <AppDropdown
