@@ -38,12 +38,9 @@ export default function SignUp() {
   async function handleSignUp(data: SignUpFormData) {
     setLoading(true); // Set loading to true when the sign-up process starts
     try {
-      const response = await signUpApi(data);
+      await signUpApi(data);
 
-      toast.success(response.data.message);
       router.push(ClientRoutes.SIGN_IN);
-    } catch (error) {
-      toast.error((error as BaseResponse).message);
     } finally {
       setLoading(false);
     }

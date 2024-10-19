@@ -45,7 +45,7 @@ const AppInput = forwardRef<HTMLInputElement, InputFieldProps>(
         )}
         <div className="relative">
           {leadingIcon && (
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 z-10">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 z-0">
               {leadingIcon}
             </div>
           )}

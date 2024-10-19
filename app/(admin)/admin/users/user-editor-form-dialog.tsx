@@ -2,17 +2,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import InputField from "../../../components/input-field";
 import AppButton from "@/app/components/app-button";
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { BaseResponse } from "@/src/utils/network/models/common/base-response";
-import {
-  createUserApi,
-  editUserApi,
-} from "@/src/data-source/users/apis/user-api";
 
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
 import AppDropdown from "@/app/components/app-dropdown";
 import { TextConstant } from "@/src/constants/text-constant";
 import FormValidator from "@/src/utils/others/form-validate";
+import { UserApi } from "@/src/data-source/users/apis/user-api";
 
 interface UserEditorFormDialogProps {
   isOpen: boolean;
@@ -69,7 +64,7 @@ export default function UserEditorFormDialog({
   const handleCreateUser = async (data: FormData) => {
     setLoading(true);
     try {
-      const response = await createUserApi({
+      const response = await UserApi.createUserApi({
         username: data.username,
         email: data.email,
         activated: data.activated,
@@ -77,9 +72,6 @@ export default function UserEditorFormDialog({
         password: data.password as string,
       });
       onSuccess(response.data.data as UserResponse);
-      toast.success("Create user successfully");
-    } catch (error) {
-      toast.error((error as BaseResponse).message);
     } finally {
       setLoading(false);
     }
@@ -88,7 +80,7 @@ export default function UserEditorFormDialog({
   const handleEditUser = async (data: FormData) => {
     setLoading(true);
     try {
-      const response = await editUserApi(user?.id as number, {
+      const response = await UserApi.   editUserApi(user?.id as number, {
         username: data.username,
         email: data.email,
         activated: data.activated,
@@ -96,9 +88,6 @@ export default function UserEditorFormDialog({
         password: (data.password?.length || 0) > 0 ? data.password : undefined,
       });
       onSuccess(response.data.data as UserResponse);
-      toast.success("Edit user successfully");
-    } catch (error) {
-      toast.error((error as BaseResponse).message);
     } finally {
       setLoading(false);
     }

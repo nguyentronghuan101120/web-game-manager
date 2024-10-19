@@ -4,9 +4,6 @@ import { useForm } from "react-hook-form";
 import Card from "../../components/card";
 import AppInput from "../../components/input-field";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import { signInApi } from "@/src/data-source/auth/apis/auth-api";
-import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import Loading from "@/app/components/loading";
 import { LocalStorageKey } from "@/src/constants/local-storage-key";
 import AppButton from "@/app/components/app-button";
@@ -17,6 +14,8 @@ import WithAuth from "@/app/components/with-auth";
 import { useEffect, useState } from "react";
 import { LocalStorageHelper } from "@/src/utils/others/local-storage-helper";
 import FormValidator from "@/src/utils/others/form-validate";
+import { AuthApi } from "@/src/data-source/auth/apis/auth-api";
+import { useRouter } from "next/navigation";
 
 // import ReCAPTCHA from "react-google-recaptcha"; // Import ReCAPTCHA component
 
@@ -49,10 +48,12 @@ export default function SignIn() {
 
   const [rememberMe, setRememberMe] = useState(true); // State for remember me checkbox
   const [loading, setLoading] = useState(false); // State to manage loading
+
+  const router = useRouter();
   async function handleSignIn(data: SignInFormData) {
     setLoading(true); // Set loading to true when the sign-up process starts
     try {
-      const response = await signInApi(data);
+      await AuthApi.signInApi(data);
 
       if (rememberMe) {
         LocalStorageHelper.setRememberMe({
@@ -63,10 +64,7 @@ export default function SignIn() {
         LocalStorageHelper.removeItem(LocalStorageKey.REMEMBER_ME);
       }
 
-      toast.success(response.data.message);
-      window.location.href = ClientRoutes.HOME;
-    } catch (error) {
-      toast.error((error as BaseResponse).message);
+      router.push(`${ClientRoutes.HOME}`);
     } finally {
       setLoading(false);
     }

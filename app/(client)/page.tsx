@@ -1,6 +1,10 @@
 "use client";
 
-const HomePage = () => {
+import { useParams } from "next/navigation";
+
+export default function HomePage() {
+  const params = useParams();
+  console.log(params);
   const newsData = [
     {
       id: 1,
@@ -43,6 +47,4 @@ const HomePage = () => {
       </div>
     </>
   );
-};
-
-export default HomePage;
+}

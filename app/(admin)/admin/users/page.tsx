@@ -4,19 +4,16 @@ import AppDialog from "@/app/components/app-dialog";
 import Loading from "@/app/components/loading";
 import AppTable from "@/app/components/table/app-table";
 import { TableColumnModel } from "@/app/components/table/table-colum-model";
-import {
-  deleteUserApi,
-  getUsersApi,
-  searchUserApi,
-} from "@/src/data-source/users/apis/user-api";
+
 import { BaseResponse } from "@/src/utils/network/models/common/base-response";
 import { useEffect, useState } from "react";
 import { UserResponse } from "@/src/data-source/users/models/responses/user-response";
-import { toast } from "react-toastify";
 import ErrorLabel from "@/app/components/error-label";
 import UserEditorFormDialog from "./user-editor-form-dialog";
 import { TextConstant } from "@/src/constants/text-constant";
 import { PaginationAndTotalModel } from "@/src/utils/network/models/common/paginationAndTotal.model";
+import { UserApi } from "@/src/data-source/users/apis/user-api";
+import { toast } from "react-toastify";
 
 export default function UsersPage() {
   const [users, setUsers] = useState<UserResponse[]>([]);
@@ -42,7 +39,7 @@ export default function UsersPage() {
       const fetchUsers = async () => {
         try {
           setIsLoading(true);
-          const result = await getUsersApi(pagination);
+          const result = await UserApi.getUsersApi(pagination);
           setUsers(result.data.data ?? []);
           setTotal(result.data.pagination?.total ?? 0);
         } catch (error) {
@@ -75,11 +72,9 @@ export default function UsersPage() {
   const handleDelete = async (userId: number) => {
     setIsLoading(true);
     try {
-      await deleteUserApi(userId);
+      await UserApi.deleteUserApi(userId);
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-      toast.success("User deleted successfully");
-    } catch (error) {
-      toast.error((error as BaseResponse).message);
+      toast.success(TextConstant.DELETE_USER_SUCCESS);
     } finally {
       setIsLoading(false);
       handleClose();
@@ -107,15 +102,16 @@ export default function UsersPage() {
       return;
     }
     try {
-      const result = await searchUserApi(q, { ...pagination, page: 1 });
+      const result = await UserApi.searchUserApi(q, {
+        ...pagination,
+        page: 1,
+      });
       setUsers(result.data.data ?? []);
       setTotal(result.data.pagination?.total ?? 0);
       setPagination((prev: PaginationAndTotalModel) => ({
         ...prev,
         page: 1,
       }));
-    } catch (error) {
-      toast.error((error as BaseResponse).message);
     } finally {
       setIsLoading(false);
     }

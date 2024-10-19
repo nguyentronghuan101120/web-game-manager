@@ -1,10 +1,7 @@
-export enum ClientApiUrl {
+export enum ApiUrls {
   REGISTER = "/auth/register",
   LOGIN = "/auth/login",
-  USERS = "/users",
-}
-
-export enum AdminApiUrl {
+  REFRESH_TOKEN = "/auth/refresh-token",
   DASHBOARD = "/admin/dashboard",
   USERS = "/users",
   SETTINGS = "/admin/settings",

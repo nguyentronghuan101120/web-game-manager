@@ -39,4 +39,5 @@ export enum TextConstant {
   ROWS_PER_PAGE = "Rows per page",
   NOT_FOUND_PAGE = "Oops! The page you're looking for doesn't exist.",
   GO_HOME = "Go Home",
+  DELETE_USER_SUCCESS = "User deleted successfully",
 }

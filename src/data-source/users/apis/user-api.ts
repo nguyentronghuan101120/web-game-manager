@@ -1,72 +1,49 @@
 import interceptor from "@/src/utils/network/interceptor/interceptor";
 import {
   BaseResponse,
-  errorResponse,
 } from "@/src/utils/network/models/common/base-response";
-import { AxiosError } from "axios";
 import { UserResponse } from "../models/responses/user-response";
 import { UserEditorRequest } from "../models/requests/user-editor-request";
-import { AdminApiUrl } from "@/src/constants/api-url";
 import { PaginationAndTotalModel } from "@/src/utils/network/models/common/paginationAndTotal.model";
+import { ApiUrls } from "@/src/constants/api-url";
 
-export async function getUsersApi(pagination: PaginationAndTotalModel) {
-  try {
+export class UserApi {
+  static async getUsersApi(pagination: PaginationAndTotalModel) {
     const result = await interceptor.get<BaseResponse<UserResponse[]>>(
-      AdminApiUrl.USERS + `?page=${pagination.page}&limit=${pagination.limit}`
+      ApiUrls.USERS + `?page=${pagination.page}&limit=${pagination.limit}`
     );
     return result;
-  } catch (error) {
-    throw errorResponse(error as AxiosError);
   }
-}
 
-export async function createUserApi(user: UserEditorRequest) {
-  try {
+  static async createUserApi(user: UserEditorRequest) {
     const result = await interceptor.post<BaseResponse<UserResponse>>(
-      AdminApiUrl.USERS,
+      ApiUrls.USERS,
       user
     );
     return result;
-  } catch (error) {
-    throw errorResponse(error as AxiosError);
   }
-}
 
-export async function editUserApi(id: number, user: UserEditorRequest) {
-  try {
+  static async editUserApi(id: number, user: UserEditorRequest) {
     const result = await interceptor.put<BaseResponse<UserResponse>>(
-      AdminApiUrl.USERS + `/${id}`,
+      ApiUrls.USERS + `/${id}`,
       user
     );
 
     return result;
-  } catch (error) {
-    throw errorResponse(error as AxiosError);
   }
-}
 
-export async function deleteUserApi(userId: number) {
-  try {
+  static async deleteUserApi(userId: number) {
     const result = await interceptor.delete<BaseResponse>(
-      AdminApiUrl.USERS + `/${userId}`
+      ApiUrls.USERS + `/${userId}`
     );
     return result;
-  } catch (error) {
-    throw errorResponse(error as AxiosError);
   }
-}
 
-export async function searchUserApi(
-  q: string,
-  pagination: PaginationAndTotalModel
-) {
-  try {
+  static async searchUserApi(q: string, pagination: PaginationAndTotalModel) {
     const result = await interceptor.get<BaseResponse<UserResponse[]>>(
-      AdminApiUrl.USERS +
+      ApiUrls.USERS +
         `/search?q=${q}&page=${pagination.page}&limit=${pagination.limit}`
     );
     return result;
-  } catch (error) {
-    throw errorResponse(error as AxiosError);
   }
 }

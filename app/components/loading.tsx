@@ -10,13 +10,13 @@ const Loading = ({
   return (
     <div
       className={`${
-        showText ?? "absolute"
-      } inset-0 bg-slate-400 bg-opacity-50 backdrop-blur flex items-center justify-center z-10 ${className}`}
+        showText ? "block" : "absolute"
+      } inset-0 bg-slate-400 bg-opacity-50 backdrop-blur flex items-center justify-center z-50 ${className}`}
     >
       <div
         aria-label="Loading..."
         role="status"
-        className="flex items-center space-x-2"
+        className="flex items-center space-x-2 bg-white p-4 rounded-lg "
       >
         <svg
           className="h-20 w-20 animate-spin stroke-blue-500"
